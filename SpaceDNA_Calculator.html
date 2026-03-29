@@ -111,36 +111,51 @@ button:disabled { background: #CCC; cursor: not-allowed; }
   </div>
 
   <div class="result" id="result-section">
-    <div class="result-header">
-      <div class="result-label">SYP Homes · Space DNA</div>
-      <div class="divider">
-        <div class="divider-line"></div>
-        <div class="divider-diamond"></div>
-        <div class="divider-line"></div>
+    <div style="background:white; border:0.5px solid #D9D0C4; border-radius:2px; padding:2.5rem 2rem 2rem; margin-bottom:0.75rem; position:relative; overflow:hidden;">
+      
+      <div id="res-watermark" style="position:absolute; bottom:-20px; right:-10px; font-size:130px; font-weight:700; color:#C4A45A; opacity:0.05; letter-spacing:-4px; line-height:1; pointer-events:none; font-family:Georgia,serif;"></div>
+
+      <p style="font-size:10px; color:#8A7860; line-height:1.8; margin:0 0 1.75rem; padding:0.75rem 1rem; border-left:2px solid #C4A45A; background:#F7F3EE; font-style:italic;">这不是你家现在的样子，也不是你理想中的家。这是你天然和空间的关系——你骨子里需要什么样的家，才能感觉对。</p>
+
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:1.75rem;">
+        <div style="height:0.5px; flex:1; background:#C4A45A;"></div>
+        <p style="font-size:8px; color:#C4A45A; letter-spacing:0.2em; text-transform:uppercase; margin:0; white-space:nowrap;">SYP Homes · Space DNA</p>
+        <div style="height:0.5px; flex:1; background:#C4A45A;"></div>
       </div>
-      <div class="type-name" id="res-name"></div>
-      <div class="type-en" id="res-en"></div>
-      <div class="anchor" id="res-anchor"></div>
+
+      <div id="res-name" style="font-size:38px; font-weight:300; color:#1E1610; margin:0 0 2px; line-height:1.1; letter-spacing:-0.5px;"></div>
+      <div id="res-en" style="font-size:11px; color:#B8A070; margin:0 0 1.75rem; letter-spacing:0.12em;"></div>
+
+      <div style="width:28px; height:2px; background:#C4A45A; margin-bottom:1.25rem;"></div>
+
+      <div id="res-anchor" style="font-size:16px; font-style:italic; color:#7A5C2E; margin:0; line-height:1.7; font-weight:300;"></div>
     </div>
 
-    <div class="desc-card">
-      <div class="desc-label">描述</div>
-      <div class="desc-text" id="res-desc"></div>
+    <div style="background:white; border:0.5px solid #D9D0C4; border-radius:2px; padding:1.25rem 1.5rem; margin-bottom:0.75rem;">
+      <p style="font-size:8px; color:#C4A45A; letter-spacing:0.18em; text-transform:uppercase; margin:0 0 8px;">描述</p>
+      <div id="res-desc" style="font-size:13px; color:#3C2E20; line-height:1.9;"></div>
     </div>
 
-    <div class="desc-card">
-      <div class="desc-label">建议</div>
-      <div class="desc-text" id="res-rec1"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#D9D0C4; margin-bottom:0.75rem;">
+      <div style="background:white; padding:1.25rem;">
+        <p style="font-size:8px; color:#C4A45A; letter-spacing:0.18em; text-transform:uppercase; margin:0 0 8px;">建议</p>
+        <div id="res-rec1" style="font-size:12px; color:#3C2E20; line-height:1.8;"></div>
+      </div>
+      <div style="background:white; padding:1.25rem;">
+        <p style="font-size:8px; color:#C4A45A; letter-spacing:0.18em; text-transform:uppercase; margin:0 0 8px;">选品方向</p>
+        <div id="res-rec2" style="font-size:12px; color:#3C2E20; line-height:1.8;"></div>
+      </div>
     </div>
 
-    <div class="desc-card">
-      <div class="desc-label">选品方向</div>
-      <div class="desc-text" id="res-rec2"></div>
-    </div>
-
-    <div class="scores">
-      <h3>各类型得分（供参考）</h3>
+    <div style="background:white; border:0.5px solid #D9D0C4; border-radius:2px; padding:1rem 1.5rem; margin-bottom:0.75rem;">
+      <p style="font-size:10px; color:#9A8F82; margin:0 0 8px; font-weight:400;">各类型得分（供参考）</p>
       <div id="score-list"></div>
+    </div>
+
+    <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin:1rem 0;">
+      <div style="height:0.5px; width:40px; background:#D9D0C4;"></div>
+      <div style="width:3px; height:3px; background:#D9D0C4; border-radius:50%;"></div>
+      <div style="height:0.5px; width:40px; background:#D9D0C4;"></div>
     </div>
 
     <button class="reset-btn" onclick="reset()">重新测试</button>
@@ -289,6 +304,8 @@ function calculate() {
 
   // 显示结果
   document.getElementById('res-name').textContent = topType;
+  const watermarks = {'拾光者':'M','策展人':'C','编辑者':'E','收藏者':'C','生活美学家':'A','大管家':'H','工坊主':'M','自由派':'F','务实者':'P','简约派':'M'};
+  document.getElementById('res-watermark').textContent = watermarks[topType] || '';
   document.getElementById('res-en').textContent = t.en;
   document.getElementById('res-anchor').textContent = t.anchor;
   document.getElementById('res-desc').textContent = t.desc;
