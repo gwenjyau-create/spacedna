@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space DNA 打分计算器</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #F5EFE6; color: #2C2420; min-height: 100vh; padding: 2rem 1rem; }
+.container { max-width: 600px; margin: 0 auto; }
+h1 { font-size: 22px; font-weight: 400; margin-bottom: 4px; }
+.subtitle { font-size: 12px; color: #9A8F82; margin-bottom: 2rem; }
+.card { background: white; border: 0.5px solid #D9D0C4; border-radius: 2px; padding: 1.5rem; margin-bottom: 1rem; }
+.q-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; color: #2C2420; }
+.q-text { font-size: 11px; color: #9A8F82; margin-bottom: 12px; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; padding: 8px 12px; border: 0.5px solid #D9D0C4; border-radius: 2px; transition: background 0.15s; font-size: 12px; }
+label:hover { background: #F7F3EE; }
+label.selected { background: #EDE4D3; border-color: #C4A45A; }
+input[type="radio"] { margin-top: 2px; accent-color: #C4A45A; flex-shrink: 0; }
+.option-key { font-weight: 600; color: #C4A45A; min-width: 16px; }
+button { width: 100%; padding: 14px; background: #2C2420; color: white; border: none; border-radius: 2px; font-size: 14px; cursor: pointer; margin-top: 0.5rem; font-family: inherit; }
+button:hover { background: #3C3430; }
+button:disabled { background: #CCC; cursor: not-allowed; }
+.result { display: none; }
+.result.show { display: block; }
+.result-header { text-align: center; padding: 2rem 1.5rem 1.5rem; background: white; border: 0.5px solid #D9D0C4; border-radius: 2px; margin-bottom: 1rem; }
+.result-label { font-size: 10px; color: #C4A45A; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+.divider { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 1rem 0; }
+.divider-line { height: 0.5px; width: 30px; background: #C4A45A; }
+.divider-diamond { width: 5px; height: 5px; background: #C4A45A; transform: rotate(45deg); }
+.type-name { font-size: 32px; font-weight: 400; margin-bottom: 4px; }
+.type-en { font-size: 12px; color: #9A8F82; letter-spacing: 0.08em; margin-bottom: 1.5rem; }
+.anchor { font-size: 15px; font-style: italic; color: #7A5C2E; line-height: 1.6; }
+.desc-card { background: white; border: 0.5px solid #D9D0C4; padding: 1.25rem 1.5rem; margin-bottom: 0.75rem; border-radius: 2px; }
+.desc-label { font-size: 9px; color: #C4A45A; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
+.desc-text { font-size: 13px; color: #3C2E20; line-height: 1.9; }
+.scores { background: white; border: 0.5px solid #D9D0C4; padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: 2px; }
+.scores h3 { font-size: 11px; color: #9A8F82; margin-bottom: 10px; font-weight: 400; }
+.score-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 0.5px solid #F0EBE3; font-size: 12px; }
+.score-row:last-child { border-bottom: none; }
+.score-row.top { font-weight: 600; color: #2C2420; }
+.score-val { color: #C4A45A; font-weight: 600; min-width: 30px; text-align: right; }
+.reset-btn { background: transparent; border: 0.5px solid #D9D0C4; color: #9A8F82; margin-top: 0.5rem; }
+.reset-btn:hover { background: #F7F3EE; color: #2C2420; }
+.footer { text-align: center; font-size: 10px; color: #B8A898; margin-top: 2rem; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Space DNA</h1>
+  <p class="subtitle">SYP Homes · 内部计算工具 · v2026-03-29</p>
+
+  <div id="form-section">
+    <div class="card">
+      <div class="q-title">Q1 · 数量感受</div>
+      <div class="q-text">家里的东西，你希望是什么状态？</div>
+      <div class="options" id="q1">
+        <label><input type="radio" name="q1" value="A"> <span class="option-key">A</span> 多一些没关系，多了就多了</label>
+        <label><input type="radio" name="q1" value="B"> <span class="option-key">B</span> 不多不少，有进有出</label>
+        <label><input type="radio" name="q1" value="C"> <span class="option-key">C</span> 少一些比较好，少了才舒服</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-title">Q2 · 收集倾向</div>
+      <div class="q-text">你会不会主动让一些物品进入家里，不是因为需要用它？</div>
+      <div class="options" id="q2">
+        <label><input type="radio" name="q2" value="A"> <span class="option-key">A</span> 会，而且不少</label>
+        <label><input type="radio" name="q2" value="B"> <span class="option-key">B</span> 偶尔会，但总体来说不会很多</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-title">Q3 · 展示欲</div>
+      <div class="q-text">你家里那些你在乎的东西，你希望它们？</div>
+      <div class="options" id="q3">
+        <label><input type="radio" name="q3" value="A"> <span class="option-key">A</span> 被看见，摆在那里让人感受到</label>
+        <label><input type="radio" name="q3" value="B"> <span class="option-key">B</span> 收好，我知道它们在那里就足够了</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-title">Q4 · 美感vs实用</div>
+      <div class="q-text">家里添置东西，你更倾向于？</div>
+      <div class="options" id="q4">
+        <label><input type="radio" name="q4" value="A"> <span class="option-key">A</span> 实用舒适优先，好看是加分</label>
+        <label><input type="radio" name="q4" value="B"> <span class="option-key">B</span> 好看品味优先，舒适是加分</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-title">Q5 · 容忍度</div>
+      <div class="q-text">家里乱了，你会？</div>
+      <div class="options" id="q5">
+        <label><input type="radio" name="q5" value="A"> <span class="option-key">A</span> 难以忍受，会很影响我的心情</label>
+        <label><input type="radio" name="q5" value="B"> <span class="option-key">B</span> 无所谓，整齐最好，乱了也不太困扰我</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-title">Q6 · 时间关系</div>
+      <div class="q-text">你和家的关系，更像？</div>
+      <div class="options" id="q6">
+        <label><input type="radio" name="q6" value="A"> <span class="option-key">A</span> 喜欢折腾，时不时调整让家保持新鲜感</label>
+        <label><input type="radio" name="q6" value="B"> <span class="option-key">B</span> 找到对的就珍惜，好的东西越用越有味道</label>
+      </div>
+    </div>
+
+    <button id="calc-btn" onclick="calculate()" disabled>计算结果</button>
+  </div>
+
+  <div class="result" id="result-section">
+    <div class="result-header">
+      <div class="result-label">SYP Homes · Space DNA</div>
+      <div class="divider">
+        <div class="divider-line"></div>
+        <div class="divider-diamond"></div>
+        <div class="divider-line"></div>
+      </div>
+      <div class="type-name" id="res-name"></div>
+      <div class="type-en" id="res-en"></div>
+      <div class="anchor" id="res-anchor"></div>
+    </div>
+
+    <div class="desc-card">
+      <div class="desc-label">描述</div>
+      <div class="desc-text" id="res-desc"></div>
+    </div>
+
+    <div class="desc-card">
+      <div class="desc-label">建议</div>
+      <div class="desc-text" id="res-rec1"></div>
+    </div>
+
+    <div class="desc-card">
+      <div class="desc-label">选品方向</div>
+      <div class="desc-text" id="res-rec2"></div>
+    </div>
+
+    <div class="scores">
+      <h3>各类型得分（供参考）</h3>
+      <div id="score-list"></div>
+    </div>
+
+    <button class="reset-btn" onclick="reset()">重新测试</button>
+  </div>
+
+  <div class="footer">Space DNA · SYP Homes · 内部工具 · 请勿外传</div>
+</div>
+
+<script>
+// ── 打分矩阵 ──────────────────────────────────────────
+// 格式：[Q1_A, Q1_B, Q1_C, Q2_A, Q2_B, Q3_A, Q3_B, Q4_A, Q4_B, Q5_A, Q5_B, Q6_A, Q6_B]
+const MATRIX = {
+  '拾光者':     { q1:{A:3,B:0,C:-2},  q2:{A:3,B:-2}, q3:{A:1,B:-2},  q4:{A:0,B:2},   q5:{A:-2,B:3},  q6:{A:2,B:1} },
+  '策展人':     { q1:{A:1,B:2,C:-2},  q2:{A:3,B:-2}, q3:{A:3,B:-2},  q4:{A:-1,B:3},  q5:{A:3,B:-2},  q6:{A:2,B:2} },
+  '编辑者':     { q1:{A:-2,B:-3,C:3}, q2:{A:3,B:-2}, q3:{A:3,B:-2},  q4:{A:-1,B:3},  q5:{A:2,B:2},   q6:{A:1,B:2} },
+  '收藏者':     { q1:{A:2,B:2,C:-2},  q2:{A:3,B:-2}, q3:{A:-2,B:3},  q4:{A:1,B:1},   q5:{A:2,B:2},   q6:{A:1,B:2} },
+  '生活美学家': { q1:{A:3,B:1,C:-2},  q2:{A:-2,B:3}, q3:{A:2,B:-2},  q4:{A:-3,B:3},  q5:{A:3,B:-2},  q6:{A:2,B:1} },
+  '大管家':     { q1:{A:3,B:-2,C:-2}, q2:{A:-2,B:3}, q3:{A:0,B:2},   q4:{A:1,B:-1},  q5:{A:3,B:-2},  q6:{A:1,B:2} },
+  '工坊主':     { q1:{A:3,B:-3,C:-2}, q2:{A:-2,B:3}, q3:{A:0,B:2},   q4:{A:3,B:-2},  q5:{A:-2,B:3},  q6:{A:2,B:1} },
+  '自由派':     { q1:{A:3,B:-2,C:-2}, q2:{A:-2,B:3}, q3:{A:0,B:2},   q4:{A:1,B:0},   q5:{A:-2,B:3},  q6:{A:1,B:1} },
+  '务实者':     { q1:{A:-2,B:3,C:-2}, q2:{A:-2,B:3}, q3:{A:0,B:2},   q4:{A:3,B:-2},  q5:{A:2,B:2},   q6:{A:1,B:2} },
+  '简约派':     { q1:{A:-2,B:-1,C:3}, q2:{A:-1,B:2}, q3:{A:-1,B:2},  q4:{A:1,B:1},   q5:{A:2,B:2},   q6:{A:1,B:2} },
+};
+
+// ── 类型内容 ──────────────────────────────────────────
+const TYPES = {
+  '拾光者': {
+    en: 'The Magpie',
+    anchor: '你的家，是每一次被打动的证明。',
+    desc: '你不在乎家里东西有多少，只要它是打动你的。可能是朋友带回来的小东西，某个集市上突然就买了的碗，又或者是某天心情好顺手拿回来的花瓶。',
+    rec1: '错落有致 · 分清主次 · 给收藏一个舞台',
+    rec2_A: '开放式收纳或玻璃柜 · 让收藏被看见',
+    rec2_B: '一盏对的灯 · 让收藏被看见',
+  },
+  '策展人': {
+    en: 'The Curator',
+    anchor: '不多不少，每件都值得在这里。',
+    desc: '你的家像一个精心布置过的展览，打动你的物品，或好看的、或有故事的、或有意义的，你希望它们被看见，被欣赏。不随意堆砌，也无须极度克制。',
+    rec1_A: '背景保持中性 · 支持展览的更新变化',
+    rec1_B: '家具也可以参与叙事',
+    rec2_A: '小件负责个性 · 大件负责舒适',
+    rec2_B: '家具选轮廓克制的 · 舞台好了展品更能发光',
+  },
+  '编辑者': {
+    en: 'The Editor',
+    anchor: '少，但每一件都是精挑细选的。',
+    desc: '你家里的东西很少，但是每一件都是精心筛选过的，真正值得的才会被留下来。这不是苛刻，这是你对自己空间最诚实的表达。',
+    rec1: '背景有温度但不抢戏 · 衬托主角不是竞争',
+    rec2_A: '设一个轮换主角位 · 此刻最对的那件放在最重要的地方',
+    rec2_B: '一盏对的灯 · 让主角被看见',
+  },
+  '收藏者': {
+    en: 'The Collector',
+    anchor: '你有不少宝贝，但只有你知道。',
+    desc: '你的柜子里和抽屉里有不少宝贝，可能是旅游带回来的小东西，也可能是某天心情好顺手拿回来的茶壶。但比起让它们展示在外，你更喜欢把它们收好，它们在那里，就已经足够。',
+    rec1_A: '不需要玻璃门 · 大容量封闭收纳 · 给宝贝足够的空间',
+    rec1_B: '不需要玻璃门 · 收纳灵活 · 进一件出一件',
+    rec2_A: '收纳容量优先 · 分类系统比外观更重要',
+    rec2_B: '选一个你喜欢的柜子 · 好看的收纳本身就是享受',
+  },
+  '生活美学家': {
+    en: 'The Aesthetic Liver',
+    anchor: '你懂生活，也懂美。',
+    desc: '家里的东西可以多，但不可以乱。你在意整体的美感，进门的感觉、家具和物品的摆放方式，都经过你的考量。家，是你对生活最认真的表达。',
+    rec1: '开放式收纳或透明柜 · 整齐和展示可以兼顾 · 让美感有归处',
+    rec2_A: '灯光和装饰优先 · 低成本调整整体美感',
+    rec2_B: '投资一件真正有品味的大件 · 用很久',
+  },
+  '大管家': {
+    en: 'The Household Manager',
+    anchor: '不怕东西多，就怕东西乱。',
+    desc: '你的家里什么都有，生活需要的东西一件不少。你不怕它们多，但是乱了会让你不舒服。',
+    rec1: '隐形收纳 · 每件东西有归处 · 顺手拿顺手放',
+    rec2_A: '分区逻辑优先 · 按使用频率决定位置 · 给自己留一个放松的角落',
+    rec2_B: '收纳本身可以好看 · 选一个你喜欢的系统 · 加一两件装饰品点睛',
+  },
+  '工坊主': {
+    en: 'The Maker',
+    anchor: '家是用来运转的，不是用来看的。',
+    desc: '你的家里东西不少，但每件都有它的工作。工具、材料、设备——它们在那里是因为有用，不是因为好看。乱了不困扰你，因为这是正在运转的状态。',
+    rec1: '动线优先 · 工具分区 · 常用的放在最顺手的地方',
+    rec2_A: '模块化收纳 · 易调整 · 随时可以重新配置',
+    rec2_B: '买质量好的 · 用得久 · 不需要经常替换',
+  },
+  '自由派': {
+    en: 'The Free Spirit',
+    anchor: '家是用来住的，不是用来看的。',
+    desc: '你不需要家看起来像什么。东西不少，生活里用得上的、暂时用不上的、放着忘了的。乱一点问题不大，偶尔找不到也没关系。需要注意的是，东西只进不出，堆积久了就会变成另一回事。',
+    rec1: '动线优先 · 常用的东西放在顺手的地方',
+    rec2_A: '模块化 · 易组合 · 随时可以调整',
+    rec2_B: '买质量好的 · 能装 · 用得久',
+  },
+  '务实者': {
+    en: 'The Pragmatist',
+    anchor: '好住比好看更重要。',
+    desc: '你的家最重要的是，用得顺手、住得舒服。好看是加分，不是必须。家对你来说是真正用来生活的地方，不需要费心经营。',
+    rec1: '选尺度对的大件 · 住得舒适才是真的对',
+    rec2_A: '注重动线规划 · 收纳更顺手',
+    rec2_B: '投资质量好收纳充足的家具 · 用得久不费心',
+  },
+  '简约派': {
+    en: 'The Minimalist',
+    anchor: '少，才是对的。',
+    desc: '你不需要很多东西。家里空着比满着更让你舒服，多了就会觉得不对劲。不是因为苛刻，是因为少才是你真正需要的状态。',
+    rec1: '善用光线 · 注重材质搭配 · 让留白也有层次',
+    rec2_A: '实用优先 · 够用就好',
+    rec2_B: '材质比款式更重要 · 选一件经得起时间的',
+  },
+};
+
+// ── 监听选项 ──────────────────────────────────────────
+document.querySelectorAll('input[type="radio"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const name = radio.name;
+    document.querySelectorAll(`label`).forEach(l => {
+      if (l.querySelector(`input[name="${name}"]`)) l.classList.remove('selected');
+    });
+    radio.closest('label').classList.add('selected');
+    checkReady();
+  });
+});
+
+function checkReady() {
+  const answered = ['q1','q2','q3','q4','q5','q6'].every(q =>
+    document.querySelector(`input[name="${q}"]:checked`)
+  );
+  document.getElementById('calc-btn').disabled = !answered;
+}
+
+// ── 计算 ──────────────────────────────────────────────
+function calculate() {
+  const ans = {};
+  ['q1','q2','q3','q4','q5','q6'].forEach(q => {
+    ans[q] = document.querySelector(`input[name="${q}"]:checked`).value;
+  });
+
+  const scores = {};
+  for (const [type, m] of Object.entries(MATRIX)) {
+    scores[type] =
+      m.q1[ans.q1] + m.q2[ans.q2] + m.q3[ans.q3] +
+      m.q4[ans.q4] + m.q5[ans.q5] + m.q6[ans.q6];
+  }
+
+  const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+  const [topType, topScore] = sorted[0];
+  const t = TYPES[topType];
+
+  // 显示结果
+  document.getElementById('res-name').textContent = topType;
+  document.getElementById('res-en').textContent = t.en;
+  document.getElementById('res-anchor').textContent = t.anchor;
+  document.getElementById('res-desc').textContent = t.desc;
+
+  // 建议（根据表达层）
+  const q4 = ans.q4;
+  const q5 = ans.q5;
+  const q6 = ans.q6;
+
+  let rec1 = t.rec1 || (q6==='A' ? t.rec1_A : t.rec1_B) || '';
+  let rec2 = t.rec2 || (q4==='A' ? t.rec2_A : t.rec2_B) || '';
+
+  // 生活美学家选品方向根据Q6（折腾vs稳定）
+  if (topType === '生活美学家') {
+    rec2 = q6==='A' ? t.rec2_A : t.rec2_B;
+  }
+
+  // 简约派+会收集，加一句说明
+  if (topType === '简约派' && ans.q2 === 'A') {
+    document.getElementById('res-desc').textContent =
+      t.desc + '对你来说，你的宝贝不需要被展示出来，你知道它们在那里就已经足够。';
+  }
+
+  // 特殊处理务实者Q5
+  if (topType === '务实者' && q5 === 'A') {
+    rec2 = t.rec2_B; // 在意乱 → 收纳充足
+  } else if (topType === '务实者' && q5 === 'B') {
+    rec2 = t.rec2_A; // 不在意乱 → 动线
+  }
+  // 务实者+想展示
+  if (topType === '务实者' && ans.q3 === 'A') {
+    rec2 = rec2 + ' · 留一个展示角落 · 少而有意思 · 不需要很多';
+  }
+
+  document.getElementById('res-rec1').textContent = rec1;
+  document.getElementById('res-rec2').textContent = rec2;
+
+  // 分数列表
+  const list = document.getElementById('score-list');
+  list.innerHTML = sorted.map(([type, score], i) =>
+    `<div class="score-row ${i===0?'top':''}">
+      <span>${type}</span>
+      <span class="score-val">${score}分</span>
+    </div>`
+  ).join('');
+
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('result-section').classList.add('show');
+  window.scrollTo(0,0);
+}
+
+function reset() {
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+  document.getElementById('calc-btn').disabled = true;
+  document.getElementById('form-section').style.display = 'block';
+  document.getElementById('result-section').classList.remove('show');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
