@@ -391,7 +391,7 @@ function getContent(type, ans) {
   }
 
   if (type === '务实者') {
-    let desc = '你的家最重要的是住得舒服、生活顺畅。好看是加分，不是必须。你不太愿意为了"看起来好"而牺牲实际生活的便利——找到好用实惠的，买了就是了，不需要反复纠结。家对你来说是真正用来生活的地方，不是住给谁看的。你的标准很清楚：家是用来住的，不是用来看的。';
+    let desc = '你的家最重要的是住得舒服、生活顺畅。好看是加分，不是必须。你不太愿意为了"看起来好"而牺牲实际生活的便利——找到好用实惠的，买了就是了，不需要反复纠结。家对你来说是真正用来生活的地方，不是住给谁看的。';
     if (q6==='A') desc += '\n\n你可能还喜欢收藏一些有意思的东西，它们也是你家个性的一部分。';
 
     let rec1 = q7==='A'
@@ -528,6 +528,19 @@ function calculate() {
   
   // 并列处理逻辑
   function breakTie(tied, ans) {
+    // Q1=C是越少越好强信号，优先简约派或编辑者
+    if (ans.q1 === 'C') {
+      const minimal = tied.filter(t => t === '简约派' || t === '编辑者');
+      if (minimal.length > 0) {
+        // 简约派vs编辑者：Q3=B选编辑者，Q3=A选简约派
+        if (minimal.length > 1) return ans.q3 === 'B' ? '编辑者' : '简约派';
+        return minimal[0];
+      }
+    }
+    // Q1!=C排除极简类型
+    if (ans.q1 !== 'C') {
+      tied = tied.filter(t => t !== '简约派' && t !== '编辑者');
+    }
     // 质感派不在意乱，Q2=A排除质感派
     if (ans.q2 === 'A') {
       tied = tied.filter(t => t !== '质感派');
@@ -535,14 +548,6 @@ function calculate() {
     // 美学家美感优先，Q3=A排除美学家
     if (ans.q3 === 'A') {
       tied = tied.filter(t => t !== '美学家');
-    }
-    // 简约派越少越好，Q1!=C排除简约派
-    if (ans.q1 !== 'C') {
-      tied = tied.filter(t => t !== '简约派');
-    }
-    // 编辑者越少越好，Q1!=C排除编辑者
-    if (ans.q1 !== 'C') {
-      tied = tied.filter(t => t !== '编辑者');
     }
     // 自由派不在意乱，Q2=A排除自由派
     if (ans.q2 === 'A') {
