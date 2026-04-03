@@ -321,7 +321,7 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
 // ── 打分矩阵 ─────────────────────────────────────────
 const MATRIX = {
   '自由派':  { q1:{A:3,B:-2,C:-3}, q2:{A:-3,B:3}, q3:{A:1,B:1},  q4:{A:1,B:1},  q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
-  '质感派':  { q1:{A:-1,B:3,C:-2}, q2:{A:-2,B:3}, q3:{A:0,B:2},  q4:{A:-2,B:3}, q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
+  '质感派':  { q1:{A:-1,B:3,C:-2}, q2:{A:-2,B:3}, q3:{A:0,B:2},  q4:{A:-1,B:3}, q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
   '务实者':  { q1:{A:-1,B:3,C:-2}, q2:{A:-2,B:3}, q3:{A:2,B:-2}, q4:{A:3,B:-2}, q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
   '美学家':  { q1:{A:2,B:1,C:-2},  q2:{A:3,B:-3}, q3:{A:-3,B:3}, q4:{A:-2,B:2}, q5:{A:2,B:-1}, q6:{A:1,B:1}, q7:{A:1,B:1} },
   '大管家':  { q1:{A:2,B:1,C:-2},  q2:{A:3,B:-3}, q3:{A:2,B:-2}, q4:{A:2,B:-1}, q5:{A:0,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
@@ -557,8 +557,8 @@ function calculate() {
     if (ans.q2 === 'A') {
       tied = tied.filter(t => t !== '自由派');
     }
-    // 务实者实用优先，Q4=B排除务实者
-    if (ans.q4 === 'B') {
+    // 务实者实用优先，Q4=B或Q3=B排除务实者
+    if (ans.q4 === 'B' || ans.q3 === 'B') {
       tied = tied.filter(t => t !== '务实者');
     }
     return tied.length > 0 ? tied[0] : sorted[0][0];
@@ -580,7 +580,8 @@ function calculate() {
   };
   document.getElementById('res-en').textContent = enNames[topType] || '';
   document.getElementById('res-anchor').textContent = content.anchor;
-  document.getElementById('res-desc').textContent = content.desc;
+  const descEl = document.getElementById('res-desc');
+  descEl.innerHTML = content.desc.replace(/\n\n/g, '<br><br>');
   document.getElementById('res-rec1').textContent = content.rec1;
   document.getElementById('res-rec2').textContent = content.rec2 || '根据你的空间和生活方式，认真选对每一件进来的东西。';
 
