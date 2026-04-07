@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space DNA · SYP Homes</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, Georgia, sans-serif;
+  background: #F5EFE6;
+  color: #2C2420;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+.container { max-width: 580px; margin: 0 auto; }
+
+/* HEADER */
+.header { text-align: center; margin-bottom: 2.5rem; }
+.header-label { font-size: 9px; color: #C4A45A; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.header h1 { font-size: 28px; font-weight: 300; letter-spacing: -0.5px; color: #1E1610; margin-bottom: 0.5rem; }
+.header-divider { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0.75rem 0; }
+.header-divider-line { height: 0.5px; width: 40px; background: #C4A45A; }
+.header-divider-diamond { width: 4px; height: 4px; background: #C4A45A; transform: rotate(45deg); }
+.header p { font-size: 11px; color: #9A8F82; line-height: 1.7; }
+
+/* QUESTION CARD */
+.card {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.q-num { font-size: 8px; color: #C4A45A; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+.q-title { font-size: 14px; font-weight: 500; color: #1E1610; margin-bottom: 14px; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 14px;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  transition: all 0.15s;
+  font-size: 12px;
+  color: #3C2E20;
+  line-height: 1.5;
+}
+label:hover { background: #FAF6F0; border-color: #C4A45A; }
+label.selected { background: #F0E8D8; border-color: #C4A45A; }
+input[type="radio"] { margin-top: 2px; accent-color: #C4A45A; flex-shrink: 0; }
+.option-key { font-weight: 600; color: #C4A45A; min-width: 14px; font-size: 11px; }
+
+/* BUTTON */
+.btn-wrap { margin-top: 1rem; }
+button {
+  width: 100%;
+  padding: 14px;
+  background: #2C2420;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.05em;
+  transition: background 0.15s;
+}
+button:hover { background: #3C3430; }
+button:disabled { background: #C8BFB5; cursor: not-allowed; }
+.btn-reset {
+  background: transparent;
+  border: 0.5px solid #D9D0C4;
+  color: #9A8F82;
+  margin-top: 0.5rem;
+}
+.btn-reset:hover { background: #FAF6F0; color: #2C2420; }
+
+/* RESULT */
+.result { display: none; }
+.result.show { display: block; }
+
+.result-hero {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 2.5rem 2rem 2rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.result-watermark {
+  position: absolute;
+  bottom: -15px;
+  right: -5px;
+  font-size: 140px;
+  font-weight: 700;
+  color: #C4A45A;
+  opacity: 0.05;
+  line-height: 1;
+  pointer-events: none;
+  font-family: Georgia, serif;
+  letter-spacing: -8px;
+}
+.result-opening {
+  font-size: 10px;
+  color: #8A7860;
+  line-height: 1.8;
+  margin-bottom: 1.75rem;
+  padding: 0.75rem 1rem;
+  border-left: 2px solid #C4A45A;
+  background: #F7F3EE;
+  font-style: italic;
+}
+.result-header-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.75rem;
+}
+.result-header-divider-line { height: 0.5px; flex: 1; background: #C4A45A; }
+.result-header-label { font-size: 8px; color: #C4A45A; letter-spacing: 0.2em; text-transform: uppercase; white-space: nowrap; }
+.result-type-name { font-size: 40px; font-weight: 300; color: #1E1610; margin-bottom: 2px; line-height: 1.1; letter-spacing: -0.5px; }
+.result-type-sub { font-size: 11px; color: #B8A070; margin-bottom: 1.75rem; letter-spacing: 0.12em; }
+.result-accent { width: 28px; height: 2px; background: #C4A45A; margin-bottom: 1.25rem; }
+.result-anchor { font-size: 16px; font-style: italic; color: #7A5C2E; line-height: 1.7; font-weight: 300; }
+
+.result-section {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.result-section-label { font-size: 8px; color: #C4A45A; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 8px; }
+.result-section-text { font-size: 13px; color: #3C2E20; line-height: 1.9; }
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #D9D0C4;
+  margin-bottom: 0.75rem;
+}
+.result-grid-cell {
+  background: white;
+  padding: 1.25rem;
+}
+.result-grid-cell .result-section-label { margin-bottom: 8px; }
+.result-grid-cell .result-section-text { font-size: 12px; }
+
+.scores {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.scores-title { font-size: 10px; color: #9A8F82; margin-bottom: 10px; }
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 0.5px solid #F0EBE3;
+  font-size: 12px;
+}
+.score-row:last-child { border-bottom: none; }
+.score-row.top { font-weight: 600; color: #1E1610; }
+.score-val { color: #C4A45A; font-weight: 600; min-width: 30px; text-align: right; }
+
+.result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 1rem 0;
+}
+.result-footer-line { height: 0.5px; width: 40px; background: #D9D0C4; }
+.result-footer-dot { width: 3px; height: 3px; background: #D9D0C4; border-radius: 50%; }
+
+.footer { text-align: center; font-size: 9px; color: #B8A898; margin-top: 2rem; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-label">SYP Homes</div>
+    <h1>Space DNA</h1>
+    <div class="header-divider">
+      <div class="header-divider-line"></div>
+      <div class="header-divider-diamond"></div>
+      <div class="header-divider-line"></div>
+    </div>
+    <p>The home that feels right isn't about style — it's about your natural relationship with space.</p>
+  </div>
+
+  <div id="form-section">
+    <div class="card">
+      <div class="q-num">Q1 · Amount</div>
+      <div class="q-title">How do you feel about the amount of stuff in your home?</div>
+      <div class="options" id="q1">
+        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>More is fine, I don't mind things piling up</label>
+        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>Just the right amount, things come and go</label>
+        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>The less the better, fewer things feel right</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q2 · Tolerance</div>
+      <div class="q-title">When your home gets messy, you:</div>
+      <div class="options" id="q2">
+        <label><input type="radio" name="q2" value="A"><span class="option-key">A</span>Find it hard to ignore — it really affects my mood</label>
+        <label><input type="radio" name="q2" value="B"><span class="option-key">B</span>Don't mind much — tidy is nice, but mess doesn't bother me</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q3 · Looks vs function</div>
+      <div class="q-title">When adding things to your home, you tend to:</div>
+      <div class="options" id="q3">
+        <label><input type="radio" name="q3" value="A"><span class="option-key">A</span>Prioritise function and comfort — looking good is a bonus</label>
+        <label><input type="radio" name="q3" value="B"><span class="option-key">B</span>Prioritise looks and taste — comfort is a bonus</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q4 · Looks vs function (continued)</div>
+      <div class="q-title">You find a piece of furniture that works well and is good value. You:</div>
+      <div class="options" id="q4">
+        <label><input type="radio" name="q4" value="A"><span class="option-key">A</span>Buy it — practical and affordable is enough</label>
+        <label><input type="radio" name="q4" value="B"><span class="option-key">B</span>Keep looking — it also needs to look right</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q5 · Display</div>
+      <div class="q-title">The things in your home that matter to you — you'd rather they:</div>
+      <div class="options" id="q5">
+        <label><input type="radio" name="q5" value="A"><span class="option-key">A</span>Are on display, where people can feel their presence</label>
+        <label><input type="radio" name="q5" value="B"><span class="option-key">B</span>Are put away — knowing they're there is enough</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q6 · Collecting</div>
+      <div class="q-title">Do you bring things into your home just because you like them — not because you need them?</div>
+      <div class="options" id="q6">
+        <label><input type="radio" name="q6" value="A"><span class="option-key">A</span>Yes, quite a few</label>
+        <label><input type="radio" name="q6" value="B"><span class="option-key">B</span>Sometimes, but not many overall</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q7 · Relationship with change</div>
+      <div class="q-title">Your relationship with your home is more like:</div>
+      <div class="options" id="q7">
+        <label><input type="radio" name="q7" value="A"><span class="option-key">A</span>Always tweaking — refreshing things to keep it feeling new</label>
+        <label><input type="radio" name="q7" value="B"><span class="option-key">B</span>Finding what's right and keeping it — good things get better with time</label>
+      </div>
+    </div>
+
+    <div class="btn-wrap">
+      <button id="calc-btn" onclick="calculate()" disabled>Discover my Space DNA</button>
+    </div>
+  </div>
+
+  <div class="result" id="result-section">
+    <div class="result-hero">
+      <div class="result-watermark" id="res-watermark"></div>
+      <div class="result-opening">This isn't what your home looks like now, or what you wish it were. This is your natural relationship with space — what kind of home you instinctively need to feel right.</div>
+      <div class="result-header-divider">
+        <div class="result-header-divider-line"></div>
+        <div class="result-header-label">SYP Homes · Space DNA</div>
+        <div class="result-header-divider-line"></div>
+      </div>
+      <div class="result-type-name" id="res-name"></div>
+      <div class="result-type-sub" id="res-sub"></div>
+      <div class="result-accent"></div>
+      <div class="result-anchor" id="res-anchor"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-label">About you</div>
+      <div class="result-section-text" id="res-desc"></div>
+    </div>
+
+    <div class="result-grid">
+      <div class="result-grid-cell">
+        <div class="result-section-label">Suggestion</div>
+        <div class="result-section-text" id="res-rec1"></div>
+      </div>
+      <div class="result-grid-cell">
+        <div class="result-section-label">What to look for</div>
+        <div class="result-section-text" id="res-rec2"></div>
+      </div>
+    </div>
+
+    <div class="scores">
+      <div class="scores-title">All scores (for reference)</div>
+      <div id="score-list"></div>
+    </div>
+
+    <div class="result-footer">
+      <div class="result-footer-line"></div>
+      <div class="result-footer-dot"></div>
+      <div class="result-footer-line"></div>
+    </div>
+
+    <button class="btn-reset" onclick="reset()">Start over</button>
+  </div>
+
+  <div class="footer">Space DNA · SYP Homes · Internal tool · Not for distribution</div>
+</div>
+
+<script>
+// ── Scoring matrix ────────────────────────────────────
+const MATRIX = {
+  'Drifter':   { q1:{A:3,B:-2,C:-3}, q2:{A:-3,B:3}, q3:{A:1,B:1},  q4:{A:1,B:1},  q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
+  'Selector':  { q1:{A:-1,B:3,C:-2}, q2:{A:-2,B:3}, q3:{A:0,B:2},  q4:{A:-1,B:3}, q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
+  'Pragmatist':{ q1:{A:-1,B:3,C:-2}, q2:{A:-2,B:3}, q3:{A:2,B:-2}, q4:{A:3,B:-2}, q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
+  'Aesthete':  { q1:{A:2,B:1,C:-2},  q2:{A:3,B:-3}, q3:{A:-3,B:3}, q4:{A:-2,B:2}, q5:{A:2,B:-1}, q6:{A:1,B:1}, q7:{A:1,B:1} },
+  'Organiser': { q1:{A:2,B:1,C:-2},  q2:{A:3,B:-3}, q3:{A:2,B:-2}, q4:{A:2,B:-1}, q5:{A:0,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
+  'Editor':    { q1:{A:-2,B:-1,C:3}, q2:{A:1,B:1},  q3:{A:-1,B:3}, q4:{A:-1,B:2}, q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
+  'Minimalist':{ q1:{A:-2,B:-1,C:3}, q2:{A:1,B:1},  q3:{A:2,B:-1}, q4:{A:2,B:-1}, q5:{A:-1,B:2}, q6:{A:1,B:1}, q7:{A:1,B:1} },
+};
+
+// ── Watermark letters ─────────────────────────────────
+const WATERMARKS = {
+  'Drifter':'D', 'Selector':'S', 'Pragmatist':'P',
+  'Aesthete':'A', 'Organiser':'O', 'Editor':'E', 'Minimalist':'M'
+};
+
+// ── Full type names ───────────────────────────────────
+const TYPE_NAMES = {
+  'Drifter':'The Drifter', 'Selector':'The Selector', 'Pragmatist':'The Pragmatist',
+  'Aesthete':'The Aesthete', 'Organiser':'The Organiser', 'Editor':'The Editor', 'Minimalist':'The Minimalist'
+};
+
+// ── Content ───────────────────────────────────────────
+function getContent(type, ans) {
+  const q1=ans.q1, q2=ans.q2, q3=ans.q3, q4=ans.q4, q5=ans.q5, q6=ans.q6, q7=ans.q7;
+
+  if (type === 'Drifter') {
+    let desc = 'Home is a place to genuinely unwind — not something that needs managing. There\'s plenty here: things you use, things you might use one day, things you\'ve simply forgotten about. A little mess doesn\'t bother you, and losing track of something occasionally is fine. That\'s just what a lived-in home feels like. The one thing to watch: when things only come in and never go out, it can quietly become something else over time.';
+    if (q6==='A') desc += '\n\nYou probably enjoy collecting the occasional interesting piece too — they find their own way in and add a certain character to your space.';
+
+    let rec1 = '';
+    const isPractical = q3==='A', isStable = q7==='B';
+    if (isPractical && isStable) {
+      rec1 = 'Sort the flow, then buy quality pieces and put them in the right place. Rather than spending time tidying, invest in getting it right from the start — when things are where they should be, they tend to stay that way.';
+    } else if (isPractical) {
+      rec1 = 'Flow comes first. Keep the things you reach for most in the most accessible spots, and storage will start to take care of itself. Your home doesn\'t need to be precise — it just needs to be findable and usable.';
+    } else if (isStable) {
+      rec1 = 'Buy quality and buy it once. Things that last don\'t need replacing, which saves the effort. Not everything needs to come in — but whatever does should genuinely be worth using.';
+    } else {
+      rec1 = 'Flow comes first. The things you use most often should be the easiest to get to. Everything else can find its own spot — no need to manage it too closely.';
+    }
+
+    let rec2 = '';
+    const isAesthetic = q3==='B', isDisplay = q5==='A';
+    if (isAesthetic && isDisplay) {
+      rec2 = 'Open shelving or glass-fronted storage lets the things you genuinely love be seen. Not everything needs to look good — but a few corners that lift your mood when you walk in make a real difference.';
+    } else if (isAesthetic) {
+      rec2 = 'Pick one or two things you really love and put them somewhere prominent. Tuck the rest away. The whole room doesn\'t need to be beautiful — but the things that matter should be properly seen.';
+    } else if (isDisplay) {
+      rec2 = 'Make use of open shelving or glass-fronted storage so the things you care about get properly seen. Things on display can still have their own order.';
+    } else {
+      rec2 = 'Go for quality storage that holds a lot and holds up. It doesn\'t need to look good — it needs to work. Durable materials and generous capacity will do the job.';
+    }
+
+    return { anchor: 'A bit more stuff, a bit of mess — neither is really a problem.', desc, rec1, rec2 };
+  }
+
+  if (type === 'Selector') {
+    let desc;
+
+    if (q3==='B') {
+      desc = 'Your home doesn\'t need to be perfectly tidy all the time — that\'s fine. But whatever comes through the door needs to look right and work well. Both are non-negotiable. You don\'t compromise, and you\'re not obsessive either. The overall state of your home is something you\'re quietly in control of.';
+    } else {
+      desc = 'Your home doesn\'t need to be perfectly tidy all the time — that\'s fine. But whatever comes through the door needs to work properly first, and can\'t look too compromised either. Both matter, and neither can be dropped. You won\'t compromise on something just because it\'s convenient, and you won\'t sacrifice usefulness for the sake of looks. The overall state of your home is something you\'re quietly in control of.';
+    }
+    if (q6==='A') desc += '\n\nYou probably enjoy collecting a few interesting pieces too — they\'re part of what makes your home feel like yours.';
+
+    let rec1 = q7==='A'
+      ? 'Keep the background stable — choose the big pieces carefully and leave them alone. Leave room for the smaller things to shift. That way you get change without disruption, and every adjustment is a chance to get things a little more right.'
+      : 'Put your budget into the piece you use or see most. Choose it carefully and use it for a long time. When the main piece is right, everything else tends to follow.';
+
+    let rec2 = q5==='A'
+      ? 'Give the things you care about a proper place to be seen — not buried in the everyday. Good things deserve to be properly looked after.'
+      : 'Closed storage keeps things neat and calm. Spend where it actually counts — on things you genuinely use and see. The right things don\'t need to be on show to be worthwhile.';
+
+    return { anchor: 'No compromises. That\'s your baseline for home.', desc, rec1, rec2 };
+  }
+
+  if (type === 'Pragmatist') {
+    let desc = 'What matters most is a home that\'s comfortable to live in and easy to move through. Looking good is a bonus, not a requirement. You\'re not going to agonise over something that ticks all the practical boxes just because it isn\'t beautiful — if it\'s good value and does the job, that\'s enough. Home is somewhere you actually live, not somewhere you maintain for show.';
+    if (q6==='A') desc += '\n\nYou probably enjoy collecting a few interesting pieces too — they\'re part of what gives your home its character.';
+
+    let rec1 = q7==='A'
+      ? 'When the layout and flow are right, small adjustments are all you need to keep things feeling fresh. No big overhauls — just tweaks. When things work, they stay comfortable.'
+      : 'Take the time to choose big pieces in the right scale. Proportion and size matter more than style — get that right once and you won\'t need to revisit it. A well-chosen piece lasts.';
+
+    let rec2 = q5==='A'
+      ? 'Leave a corner for the things you actually care about — a few pieces that mean something. It doesn\'t need to be much, but it\'s worth having one spot that gives the space some room to breathe.'
+      : 'Closed storage combined with a clear layout does the work quietly. When things are easy to put away and easy to find, the whole home feels more settled.';
+
+    return { anchor: 'A home that works is a home that\'s right.', desc, rec1, rec2 };
+  }
+
+  if (type === 'Aesthete') {
+    let desc = 'You pay close attention to how your home looks and feels — the feeling when you walk in, the way furniture and objects are arranged, all of it considered. Beauty isn\'t a luxury for you, it\'s a basic need. You\'re not necessarily chasing brands, but you\'re always after things that look right in the right place. Home is where your sense of taste gets to be taken seriously.';
+    if (q6==='A') desc += '\n\nYou probably enjoy collecting particular pieces too — things that are interesting in their own right and add something specific to the space.';
+
+    let rec1 = q7==='A'
+      ? 'Keep the background neutral and steady — restrained walls and big pieces — and leave room to adjust the details whenever you want. The overall feel stays coherent while the smaller things keep moving.'
+      : 'Invest in one or two pieces you genuinely love and live with them for a long time. When the right pieces are in place, the character of the whole space comes through on its own.';
+
+    let rec2 = q1==='A'
+      ? 'Create a few visual focal points so the things you love are actually seen — not lost in the everyday. Open shelving or glass-fronted storage can let you display and stay organised at the same time.'
+      : 'Be selective about what comes in and keep the background restrained. When everything earns its place, the things you\'ve chosen well genuinely stand out.';
+
+    return { anchor: 'You appreciate life. But beauty — that you truly understand.', desc, rec1, rec2 };
+  }
+
+  if (type === 'Organiser') {
+    const isPinwei = q4==='B';
+    let anchor, desc;
+
+    if (isPinwei) {
+      anchor = 'Plenty of things, everything in order — and always with taste.';
+      desc = 'You have a lot at home — and for someone who appreciates comfort and practicality, that\'s not the issue. You\'re not trying to control the number of things you own, but you do care about quality and order. More isn\'t a problem. Disorder is. Every thing needs a place: somewhere it belongs, somewhere it goes back to. A home that\'s well-lived, well-organised, and still tasteful — that\'s where you feel settled.';
+    } else {
+      anchor = 'It\'s not how much there is. It\'s whether it\'s all in order.';
+      desc = 'You have a lot at home, and that doesn\'t bother you. What does bother you is when the order breaks down. Every thing needs somewhere it belongs — findable, returnable. Compared to how things look, what matters more is a home that runs properly and feels genuinely in order. That\'s what makes it feel right to live in.';
+    }
+    if (q6==='A') desc += '\n\nYou probably enjoy collecting a few things too — and they all have their proper, well-considered place.';
+
+    let rec1;
+    if (isPinwei) {
+      rec1 = q7==='A'
+        ? 'Modular storage suits you well — it can be adjusted and expanded as your home evolves, without having to start from scratch. Order follows the way you live, not the other way around. Take your time with pieces — choose things that work well and look good. It takes longer, but when something is both useful and beautiful, you won\'t feel like replacing it.'
+        : 'Plan storage around the way you move through the space. Even with a lot of things, if everything has a home it stays manageable. Put your budget into the key pieces — the ones you\'ll use and see most — and choose them carefully for quality and staying power. Things that hold up over time and still look right — that\'s the standard.';
+    } else {
+      rec1 = q7==='A'
+        ? 'Modular storage suits you well — it adjusts and expands as your life changes, without needing to be rebuilt. When the system is solid, order takes care of itself.'
+        : 'Do one proper round of storage planning and give everything a fixed place — easy to pick up, easy to put back. A good system is hard to break.';
+    }
+
+    let rec2;
+    const isA = q1==='A', isDisplay = q5==='A';
+    if (isA && isDisplay) {
+      rec2 = 'Open shelving or glass-fronted storage lets you display and stay organised at the same time — things can be out and still feel in order.';
+    } else if (isA && !isDisplay) {
+      rec2 = 'Closed storage as the main approach — things go in, out of sight. Enough capacity, and the sense of calm comes naturally.';
+    } else if (!isA && isDisplay) {
+      rec2 = 'Choose a few things to display and keep the rest stored away. What\'s shown is the best of it; what\'s stored is the everyday.';
+    } else {
+      rec2 = 'Things come in, things go out — closed storage keeps it contained. Regular editing stops things from piling up, and a good system means they don\'t need to.';
+    }
+
+    return { anchor, desc, rec1, rec2 };
+  }
+
+  if (type === 'Editor') {
+    let desc = 'There isn\'t much in your home, but every piece has been carefully chosen. Whether it\'s beautiful, or genuinely meaningful to you — if it\'s staying, it\'s earned its place. This isn\'t strictness. It\'s clarity. Less is a choice that comes from knowing your own taste very well, and expressing that through the space as honestly as possible.';
+    if (q6==='A' && q5==='A') desc += '\n\nYou might enjoy collecting a few particular things too — rigorously selected, and each one worth being properly seen.';
+
+    let rec1 = q7==='A'
+      ? 'Give each piece a starring position — whatever feels most right at this moment goes in the most prominent spot. No need for big changes. Shifting one thing can rebalance the whole room.'
+      : 'Keep the background warm but unobtrusive — restrained walls and big pieces. When the stage is steady, the things you\'ve chosen carefully shine on their own, without needing to be rearranged.';
+
+    let rec2 = '';
+    if (q3==='A' || q5==='B') {
+      rec2 = 'Less is an ongoing process — regular editing and honest reassessment, not a one-time decision. If you share your home with others, clear zones and storage systems make it easier for everyone to maintain. Or if doing it entirely on your own terms isn\'t realistic right now, start with one area that\'s yours — a corner, a table, a shelf. Get it right there first.';
+    }
+
+    return { anchor: 'Less, but always the right things. That\'s both a choice and a skill.', desc, rec1, rec2 };
+  }
+
+  if (type === 'Minimalist') {
+    let desc = 'You don\'t need much. A home with less in it simply feels better — when things start to accumulate, something feels off. It\'s not strictness. It\'s just how you\'re made.';
+    if (q2==='A') {
+      desc += ' You\'re sensitive to your space — disorder unsettles you, and a clear, calm home is what grounds you.';
+    }
+    desc += ' Home is somewhere you can truly switch off.';
+    if (q6==='A') desc += '\n\nYou might have a few small things you particularly care about — not many, but each one has its own meaning and its own way of belonging.';
+
+    let rec1 = 'Less doesn\'t mean cold. A good-quality rug, a warm lamp, a plant — none of it needs to be much, but it gives a spare home some warmth. Choose materials with texture and substance. When things feel right to touch, the space comes alive.';
+
+    let rec2 = q7==='A'
+      ? 'Choose your main pieces for stability and durability — get them right once and you won\'t need to replace them often. Leave room for the smaller things to change when you want. No need to overthink it.'
+      : 'Within your means, choose the best version of what you need. One thing that\'s genuinely right is worth more than ten that are almost there. Time will show the difference.';
+
+    return { anchor: 'Less. That\'s just right.', desc, rec1, rec2 };
+  }
+
+  return { anchor: '', desc: '', rec1: '', rec2: '' };
+}
+
+// ── Listen for selections ─────────────────────────────
+document.querySelectorAll('input[type="radio"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const name = radio.name;
+    document.querySelectorAll(`label`).forEach(l => {
+      if (l.querySelector(`input[name="${name}"]`)) l.classList.remove('selected');
+    });
+    radio.closest('label').classList.add('selected');
+    checkReady();
+  });
+});
+
+function checkReady() {
+  const answered = ['q1','q2','q3','q4','q5','q6','q7'].every(q =>
+    document.querySelector(`input[name="${q}"]:checked`)
+  );
+  document.getElementById('calc-btn').disabled = !answered;
+}
+
+// ── Calculate ─────────────────────────────────────────
+function calculate() {
+  const ans = {};
+  ['q1','q2','q3','q4','q5','q6','q7'].forEach(q => {
+    ans[q] = document.querySelector(`input[name="${q}"]:checked`).value;
+  });
+
+  const scores = {};
+  for (const [type, m] of Object.entries(MATRIX)) {
+    scores[type] =
+      m.q1[ans.q1] + m.q2[ans.q2] + m.q3[ans.q3] +
+      m.q4[ans.q4] + m.q5[ans.q5] + m.q6[ans.q6] + m.q7[ans.q7];
+  }
+
+  const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+
+  function breakTie(tied, ans) {
+    if (ans.q1 === 'C') {
+      const minimal = tied.filter(t => t === 'Minimalist' || t === 'Editor');
+      if (minimal.length > 0) {
+        if (minimal.length > 1) return ans.q3 === 'B' ? 'Editor' : 'Minimalist';
+        return minimal[0];
+      }
+    }
+    if (ans.q1 !== 'C') {
+      tied = tied.filter(t => t !== 'Minimalist' && t !== 'Editor');
+    }
+    if (ans.q2 === 'A') {
+      tied = tied.filter(t => t !== 'Selector');
+    }
+    if (ans.q3 === 'A') {
+      tied = tied.filter(t => t !== 'Aesthete');
+    }
+    if (ans.q2 === 'A') {
+      tied = tied.filter(t => t !== 'Drifter');
+    }
+    if (ans.q4 === 'B' || ans.q3 === 'B') {
+      tied = tied.filter(t => t !== 'Pragmatist');
+    }
+    return tied.length > 0 ? tied[0] : sorted[0][0];
+  }
+
+  const topScore = sorted[0][1];
+  const tiedTypes = sorted.filter(([,s]) => s === topScore).map(([t]) => t);
+  const topType = tiedTypes.length > 1 ? breakTie(tiedTypes, ans) : tiedTypes[0];
+  const content = getContent(topType, ans);
+
+  document.getElementById('res-watermark').textContent = WATERMARKS[topType] || '';
+
+  let displayName = TYPE_NAMES[topType];
+  if (topType === 'Organiser' && ans.q4 === 'B') displayName = 'The Organiser';
+  document.getElementById('res-name').textContent = displayName;
+  document.getElementById('res-sub').textContent = '';
+  document.getElementById('res-anchor').textContent = content.anchor;
+
+  const descEl = document.getElementById('res-desc');
+  descEl.innerHTML = content.desc.replace(/\n\n/g, '<br><br>');
+  document.getElementById('res-rec1').textContent = content.rec1;
+  document.getElementById('res-rec2').textContent = content.rec2 || 'Be selective about what comes in. Whatever you choose, make sure it genuinely earns its place.';
+
+  const reordered = [...sorted].sort((a, b) => {
+    if (a[0] === topType) return -1;
+    if (b[0] === topType) return 1;
+    return b[1] - a[1];
+  });
+
+  const list = document.getElementById('score-list');
+  list.innerHTML = reordered.map(([type, score], i) =>
+    `<div class="score-row ${i===0?'top':''}">
+      <span>${TYPE_NAMES[type]}</span>
+      <span class="score-val">${score}</span>
+    </div>`
+  ).join('');
+
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('result-section').classList.add('show');
+  window.scrollTo(0,0);
+}
+
+function reset() {
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+  document.getElementById('calc-btn').disabled = true;
+  document.getElementById('form-section').style.display = 'block';
+  document.getElementById('result-section').classList.remove('show');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
