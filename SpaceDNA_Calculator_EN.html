@@ -171,6 +171,34 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
 .score-row.top { font-weight: 600; color: #1E1610; }
 .score-val { color: #C4A45A; font-weight: 600; min-width: 30px; text-align: right; }
 
+.result-cta {
+  background: white;
+  border: 0.5px solid #C4A45A;
+  border-radius: 2px;
+  padding: 1.5rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+.result-cta-text {
+  font-size: 13px;
+  font-style: italic;
+  color: #7A5C2E;
+  margin-bottom: 0.9rem;
+  font-family: Georgia, serif;
+}
+.result-cta-btn {
+  display: inline-block;
+  padding: 10px 28px;
+  border: 0.5px solid #2C2420;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #2C2420;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: all 0.15s;
+}
+.result-cta-btn:hover { background: #2C2420; color: #F5EFE6; }
+
 .result-footer {
   display: flex;
   align-items: center;
@@ -302,6 +330,11 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
     <div class="scores">
       <div class="scores-title">All scores (for reference)</div>
       <div id="score-list"></div>
+    </div>
+
+    <div class="result-cta">
+      <div class="result-cta-text">Want to make your home feel more like you?</div>
+      <a href="https://www.syphomes.com/find-your-starting-point" class="result-cta-btn" target="_blank">Find Your Starting Point</a>
     </div>
 
     <div class="result-footer">
