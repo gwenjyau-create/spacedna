@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space DNA · SYP Homes</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #F5EFE6;
+  color: #2C2420;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+.container { max-width: 580px; margin: 0 auto; }
+
+/* HEADER */
+.header { text-align: center; margin-bottom: 2.5rem; }
+.header-label { font-size: 9px; color: #C4A45A; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.header h1 { font-size: 28px; font-weight: 300; letter-spacing: -0.5px; color: #1E1610; margin-bottom: 0.5rem; }
+.header-divider { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0.75rem 0; }
+.header-divider-line { height: 0.5px; width: 40px; background: #C4A45A; }
+.header-divider-diamond { width: 4px; height: 4px; background: #C4A45A; transform: rotate(45deg); }
+.header p { font-size: 11px; color: #9A8F82; line-height: 1.7; }
+
+/* QUESTION CARD */
+.card {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.q-num { font-size: 8px; color: #C4A45A; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+.q-title { font-size: 14px; font-weight: 500; color: #1E1610; margin-bottom: 4px; }
+.q-sub { font-size: 11px; color: #9A8F82; margin-bottom: 14px; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 14px;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  transition: all 0.15s;
+  font-size: 12px;
+  color: #3C2E20;
+  line-height: 1.5;
+}
+label:hover { background: #FAF6F0; border-color: #C4A45A; }
+label.selected { background: #F0E8D8; border-color: #C4A45A; }
+input[type="radio"] { margin-top: 2px; accent-color: #C4A45A; flex-shrink: 0; }
+.option-key { font-weight: 600; color: #C4A45A; min-width: 14px; font-size: 11px; }
+
+/* BUTTON */
+.btn-wrap { margin-top: 1rem; }
+button {
+  width: 100%;
+  padding: 14px;
+  background: #2C2420;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.05em;
+  transition: background 0.15s;
+}
+button:hover { background: #3C3430; }
+button:disabled { background: #C8BFB5; cursor: not-allowed; }
+.btn-reset {
+  background: transparent;
+  border: 0.5px solid #D9D0C4;
+  color: #9A8F82;
+  margin-top: 0.5rem;
+}
+.btn-reset:hover { background: #FAF6F0; color: #2C2420; }
+
+/* RESULT */
+.result { display: none; }
+.result.show { display: block; }
+
+.result-hero {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 2.5rem 2rem 2rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.result-watermark {
+  position: absolute;
+  bottom: -15px;
+  right: -5px;
+  font-size: 140px;
+  font-weight: 700;
+  color: #C4A45A;
+  opacity: 0.05;
+  line-height: 1;
+  pointer-events: none;
+  font-family: Georgia, serif;
+  letter-spacing: -8px;
+}
+.result-opening {
+  font-size: 10px;
+  color: #8A7860;
+  line-height: 1.8;
+  margin-bottom: 1.75rem;
+  padding: 0.75rem 1rem;
+  border-left: 2px solid #C4A45A;
+  background: #F7F3EE;
+  font-style: italic;
+}
+.result-header-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.75rem;
+}
+.result-header-divider-line { height: 0.5px; flex: 1; background: #C4A45A; }
+.result-header-label { font-size: 8px; color: #C4A45A; letter-spacing: 0.2em; text-transform: uppercase; white-space: nowrap; }
+.result-type-name { font-size: 40px; font-weight: 300; color: #1E1610; margin-bottom: 2px; line-height: 1.1; letter-spacing: -0.5px; }
+.result-type-en { font-size: 11px; color: #B8A070; margin-bottom: 1.75rem; letter-spacing: 0.12em; }
+.result-accent { width: 28px; height: 2px; background: #C4A45A; margin-bottom: 1.25rem; }
+.result-anchor { font-size: 16px; font-style: italic; color: #7A5C2E; line-height: 1.7; font-weight: 300; }
+
+.result-cta {
+  background: white;
+  border: 0.5px solid #C4A45A;
+  border-radius: 2px;
+  padding: 1.5rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+.result-cta-text {
+  font-size: 13px;
+  font-style: italic;
+  color: #7A5C2E;
+  margin-bottom: 0.9rem;
+  font-family: Georgia, serif;
+}
+.result-cta-btn {
+  display: inline-block;
+  padding: 10px 28px;
+  border: 0.5px solid #2C2420;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #2C2420;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: all 0.15s;
+}
+.result-cta-btn:hover { background: #2C2420; color: #F5EFE6; }
+
+.result-section {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.result-section-label { font-size: 8px; color: #C4A45A; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 8px; }
+.result-section-text { font-size: 13px; color: #3C2E20; line-height: 1.9; }
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #D9D0C4;
+  margin-bottom: 0.75rem;
+}
+.result-grid-cell {
+  background: white;
+  padding: 1.25rem;
+}
+.result-grid-cell .result-section-label { margin-bottom: 8px; }
+.result-grid-cell .result-section-text { font-size: 12px; }
+
+.scores {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.scores-title { font-size: 10px; color: #9A8F82; margin-bottom: 10px; }
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 0.5px solid #F0EBE3;
+  font-size: 12px;
+}
+.score-row:last-child { border-bottom: none; }
+.score-row.top { font-weight: 600; color: #1E1610; }
+.score-val { color: #C4A45A; font-weight: 600; min-width: 30px; text-align: right; }
+
+.result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 1rem 0;
+}
+.result-footer-line { height: 0.5px; width: 40px; background: #D9D0C4; }
+.result-footer-dot { width: 3px; height: 3px; background: #D9D0C4; border-radius: 50%; }
+
+.footer { text-align: center; font-size: 9px; color: #B8A898; margin-top: 2rem; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-label">SYP Homes</div>
+    <h1>Space DNA</h1>
+    <div class="header-divider">
+      <div class="header-divider-line"></div>
+      <div class="header-divider-diamond"></div>
+      <div class="header-divider-line"></div>
+    </div>
+    <p>发现你天然和空间的关系</p>
+  </div>
+
+  <div id="form-section">
+    <div class="card">
+      <div class="q-num">Q1 · 数量感受</div>
+      <div class="q-title">家里的东西，你希望是什么状态？</div>
+      <div class="options" id="q1">
+        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>多一些没关系，多了就多了</label>
+        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>不多不少，有进有出</label>
+        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>少一些比较好，少了才舒服</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q2 · 凌乱容忍度</div>
+      <div class="q-title">家里乱了，你会？</div>
+      <div class="options" id="q2">
+        <label><input type="radio" name="q2" value="A"><span class="option-key">A</span>难以忍受，会很影响我的心情</label>
+        <label><input type="radio" name="q2" value="B"><span class="option-key">B</span>无所谓，整齐最好，乱了也不太困扰我</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q3 · 添置</div>
+      <div class="q-title">家里要添一样东西。你找到一个好用、价格合适的，样子普通。你会？</div>
+      <div class="options" id="q3">
+        <label><input type="radio" name="q3" value="A"><span class="option-key">A</span>先买下来。好用、价格合适最重要，好看当然加分，普通一点也可以</label>
+        <label><input type="radio" name="q3" value="B"><span class="option-key">B</span>先不买。宁可暂时空着、多花些时间慢慢找，也希望找到外观真正符合自己喜好的东西</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q4 · 感受</div>
+      <div class="q-title">家里有一件家具一直很好用，样子也不难看，但和周围的搭配总有一点不协调。你更接近哪种感受？</div>
+      <div class="options" id="q4">
+        <label><input type="radio" name="q4" value="A"><span class="option-key">A</span>我会注意到，但只要整体住着舒服、用着顺手，通常不会一直在意</label>
+        <label><input type="radio" name="q4" value="B"><span class="option-key">B</span>即使完全不影响使用，那一点不协调还是会反复引起我的注意，很难忽略</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q5 · 家的意义</div>
+      <div class="q-title">对你来说，什么更能让你感受到家的意义？</div>
+      <div class="options" id="q5">
+        <label><input type="radio" name="q5" value="A"><span class="option-key">A</span>有一个属于自己的空间，可以不受打扰，按照自己的节奏放松和恢复</label>
+        <label><input type="radio" name="q5" value="B"><span class="option-key">B</span>有一个让亲近的人自然聚在一起的地方，可以分享日常、享受陪伴</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q6 · 连接</div>
+      <div class="q-title">什么更能让你和一个空间产生连接？</div>
+      <div class="options" id="q6">
+        <label><input type="radio" name="q6" value="A"><span class="option-key">A</span>身边有承载个人回忆的东西，比如照片、旅行带回来的小物件。这些熟悉的痕迹让我更有家的感觉</label>
+        <label><input type="radio" name="q6" value="B"><span class="option-key">B</span>空间本身的感觉对了，比如光线、触感和温度。待在里面就自在，不太依赖某件特定的物品</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q7 · 时间关系</div>
+      <div class="q-title">你和家的关系，更像？</div>
+      <div class="options" id="q7">
+        <label><input type="radio" name="q7" value="A"><span class="option-key">A</span>喜欢折腾，时不时调整让家保持新鲜感</label>
+        <label><input type="radio" name="q7" value="B"><span class="option-key">B</span>找到对的就珍惜，好的东西越用越有味道</label>
+      </div>
+    </div>
+
+    <div class="btn-wrap">
+      <button id="calc-btn" onclick="calculate()" disabled>查看我的 Space DNA</button>
+    </div>
+  </div>
+
+  <div class="result" id="result-section">
+    <div class="result-hero">
+      <div class="result-watermark" id="res-watermark"></div>
+      <div class="result-opening">这不是你家现在的样子，也不是你理想中的家。这是你天然和空间的关系——你骨子里需要什么样的家，才能感觉对。</div>
+      <div class="result-header-divider">
+        <div class="result-header-divider-line"></div>
+        <div class="result-header-label">SYP Homes · Space DNA</div>
+        <div class="result-header-divider-line"></div>
+      </div>
+      <div class="result-type-name" id="res-name"></div>
+      <div class="result-type-en" id="res-en"></div>
+      <div class="result-accent"></div>
+      <div class="result-anchor" id="res-anchor"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-label">你是谁</div>
+      <div class="result-section-text" id="res-desc"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-label">你和家的关系</div>
+      <div class="result-section-text" id="res-relation"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-label">设计方向</div>
+      <div class="result-section-text" id="res-direction"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-label">让家更像你</div>
+      <div class="result-section-text" id="res-yours"></div>
+    </div>
+
+    <div class="result-cta">
+      <div class="result-cta-text">想让你的家更像你？</div>
+      <a href="https://www.syphomes.com/find-your-starting-point" class="result-cta-btn" target="_blank">找到你的起点</a>
+    </div>
+
+    <div class="result-footer">
+      <div class="result-footer-line"></div>
+      <div class="result-footer-dot"></div>
+      <div class="result-footer-line"></div>
+    </div>
+
+    <button class="btn-reset" onclick="reset()">重新测试</button>
+  </div>
+
+  <div class="footer">Space DNA · SYP Homes · syphomes.com</div>
+</div>
+
+<script>
+// ── 打分矩阵 ─────────────────────────────────────────
+
+// 有品味的大管家：在意乱组里，Q3=B 或 Q4=B 只满足其一（两者都选B是美学家）
+function isPinweiGuanjia(ans) {
+  return ans.q3 === 'B' || ans.q4 === 'B';
+}
+
+// ── 水印字母 ─────────────────────────────────────────
+const WATERMARKS = {
+  '自由派':'D', '质感派':'S', '务实者':'P',
+  '美学家':'A', '大管家':'O', '编辑者':'E', '简约派':'M'
+};
+
+// ── 结果文案（2026-10 修订版）────────────────────────
+// 你是谁：人格（Q1–Q4）
+const ABOUT = {
+  '自由派': { anchor:'东西多一点，乱一点，那都不是事儿。',
+    desc:'家对你来说，是一个可以放松生活、不必时时费心经营的地方。物品多一些、摆放随意一些，通常不会让你太困扰。你更愿意把精力放在生活本身，而不是时刻维持整齐。家可以有生活留下的痕迹，只要不妨碍你自在地生活，就不必事事规整。' },
+  '质感派': { anchor:'好用与好看，你都放在心上。',
+    desc:'你喜欢家里的物品保持适当的数量，不必时刻整齐，但对生活品质和视觉感受都有自己的要求。挑选一件东西时，你会考虑它是否好用，也会关注它与整个空间是否协调。对你而言，家可以松弛，但不必因此忽略质感；实用与美感，都值得认真对待。' },
+  '务实者': { anchor:'好住比好看更重要。',
+    desc:'你希望家住得舒服、生活顺畅。好看当然是加分，但不必成为每次选择的必要条件。只要东西好用、价格合适，整体生活也足够顺手，你就不需要为了外观反复纠结。家最重要的，是能自然地服务每天的生活。' },
+  '美学家': { anchor:'美感对你来说，是生活的基本需要。',
+    desc:'你对空间的视觉效果格外敏感。从家具造型、材质关系到整体搭配，你很难忽略那些不协调的细节；即使完全不影响使用，它们也可能反复进入你的视线。凌乱同样容易打断你对空间的感受。你希望家不仅舒适、好用，还能真正符合自己的审美标准。' },
+  '大管家': { anchor:'东西各归其位，生活才有秩序。',
+    desc:'你很重视家的舒适、实用与秩序。对你来说，关键是每件东西都有合适的位置，找得到、放得回，让日常生活顺畅运转。相比反复推敲外观，一个好用、整洁、有条理的家，更能让你住得踏实。' },
+  '有品味的大管家': { anchor:'井井有条，不失品味。',
+    desc:'你重视家的舒适、实用与秩序，也不会忽略视觉美感。你可能会为了合心意的外观多花时间，也可能对某些搭配的不协调比较敏感；但你通常会把美感与生活中的便利、品质和使用需要放在一起考虑。一个好住、有秩序，也看着舒服的家，才更能让你安心享受日常。' },
+  '编辑者': { anchor:'少而精，是一种选择，也是一种能力。',
+    desc:'你更喜欢物品少而有选择的空间。留下来的东西不必很多，但要有存在的理由：或许因为好用，或许因为视觉上合心意，也可能因为对你有特别的意义。你在意取舍，也在意物品与留白之间的关系。对你来说，家越清楚地表达自己的需要，就越不必靠数量来填满。' },
+  '简约派': { anchor:'少，就对了。',
+    desc:'你不需要很多东西。空间保持清爽、日常使用简单顺手，会让你更自在。你更愿意把注意力放在真正需要的物品和活动上，而不是持续增加东西。家是能够放下负担、让自己轻松生活的地方。' },
+};
+const MINIMALIST_Q2A = '你也更在意凌乱，物品各得其所、视线恢复清爽，会让你更加安心。';
+
+// 你和家的关系：Q5×Q6×Q7，所有人格共用
+const RELATION = {
+  AAA:'对你来说，家很重要的一层意义，是一个能按自己的节奏放松下来、慢慢恢复的地方。熟悉的物件在这里起着特别的作用：一张照片、一件旅行带回来的小物，往往能让空间更有属于自己的痕迹。你也喜欢让家随着生活逐渐变化，不同时刻的选择，让这个空间始终贴近当下的你。',
+  AAB:'对你来说，家很大程度上是一个可以暂时放下外界要求、回到自己节奏里的地方。带着记忆的东西是你和空间之间重要的连接，看到它们，会有一种回来了的踏实。你更倾向与家建立长久的关系，让熟悉的布置与陪伴多年的物品，随着时间慢慢积累出亲切感。',
+  ABA:'对你来说，家的意义很多来自独处的时刻：不被打扰，按照自己的节奏放松和恢复。让你自在的，往往是空间本身的感觉：光线落下来的方式、材质的触感、温度是否刚好。你也喜欢让这种感觉保持新鲜，随着季节或生活节奏调整一些细节，让家继续贴合当下的你。',
+  ABB:'对你来说，家是让自己慢下来、恢复精神的地方。你对空间的感受更多来自整体氛围，光线、触感和温度对了，人自然就能放松，不太依赖某件特定的物品。一旦找到适合自己的状态，你更愿意让这份舒适长久延续，熟悉的环境也会让你安心。',
+  BAA:'对你来说，家的意义和亲近的人分不开，一起度过的日常让空间有了温度。那些承载回忆的东西，有的记录着共同经历的时光，有的属于你自己的故事，都让这个家有了特别的意义。你也喜欢家跟着生活一起向前，随着新的经历和生活阶段调整它的样子。',
+  BAB:'对你来说，家之所以有意义，很大一部分是因为亲近的人能够在这里相聚、分享日常。带着回忆的物品让你和空间产生连接，它们记录着经历过的时光，也承载着你与重要的人之间的故事。你更珍惜家中慢慢形成的熟悉感，让这些故事随着生活延续。',
+  BBA:'对你来说，家的意义在于和亲近的人分享日常、自然相处。让你觉得自在的，是空间本身的感觉：光线、触感、温度对了，人就更愿意停留。你也喜欢让这种氛围保持流动，随着季节与生活的变化适度调整，让空间不断拥有新的活力。',
+  BBB:'对你来说，家是亲近的人可以自然相聚、分享日常的地方。你对家的感受更多来自整体氛围，而不是某件特定的物品。光线、触感和温度恰到好处，相处也会更自在。找到适合的空间状态之后，你更愿意让这种熟悉与舒适慢慢延续。',
+};
+
+// 设计方向：人格 + Q7
+const DIRECTION = {
+  '自由派': { A:'让常用物品待在顺手的位置，收纳不必复杂，给生活留一点灵活调整的余地。你不需要处处严格管理，只要重要的事情做起来方便，家就能继续保持松弛。',
+             B:'把常用的家具和用品认真选到位，优先考虑耐用、方便维护的选择。适合自己的东西用得久，也能减少重复购买和整理的负担。' },
+  '质感派': { A:'让重要的家具和整体配色形成稳定的基础，小件和局部保留调整空间。每次变化都兼顾使用便利与视觉协调，家便可以保持新鲜，却不失整体感。',
+             B:'把精力放在长期使用、又会影响整体观感的关键物件上。选择时兼顾好用与耐看，基础选得合适，日后便不需要反复调整。' },
+  '务实者': { A:'先把日常动线和使用习惯安排顺畅，再为局部调整留一些弹性。不必大动干戈，小幅改变也能让生活保持便利和新鲜感。',
+             B:'优先选择尺寸合适、舒适耐用、维护简单的家具。一次把重要的使用需求考虑清楚，比为了款式反复更换更适合你。' },
+  '美学家': { A:'先为整个空间建立协调的视觉基础，再让局部的材质、物件或细节随着自己的喜好调整。变化可以发生，但整体美感不必因此被打散。',
+             B:'把时间和预算放在真正影响整体视觉感受的元素上，比如重要家具的比例、材质之间的关系，以及光线与背景的协调。找到自己认同的效果后，便值得长久保留。' },
+  '大管家': { A:'建立能够随生活调整的收纳与归位方式，重点是东西容易找到、方便放回，而不是增加整理的步骤。这样生活变化了，秩序也能跟着维持。',
+             B:'为常用物品安排清楚而稳定的位置，让取用和归位都顺手。好管理的系统不一定复杂，关键是能自然融入每天的生活。' },
+  '有品味的大管家': { A:'让收纳与动线保持灵活，随着生活变化适度调整；同时留心关键家具之间的搭配。好用、整齐与视觉协调，可以在同一套安排里兼顾。',
+             B:'把日常动线和归位方式一次考虑周全，再认真挑选长期使用的关键物件。兼顾品质、耐用与空间观感，让家经得起时间，也住得省心。' },
+  '编辑者': { A:'保留清晰的主次与适当的留白，留给少量重点物件表达的空间。想调整时，不必添很多东西，移动或替换一处重点也可能让整体焕然一新。',
+             B:'让家具、材质和留白形成稳定的整体关系。用心选择真正适合的东西，并给它们长久的位置，不需要频繁改变，空间也能持续保持自己的气质。' },
+  '简约派': { A:'大件以耐用、够用和简洁为原则，局部留些调整余地。需要变化时，从小范围着手即可，避免让空间慢慢被新增物品填满。',
+             B:'选择符合生活需要、易于维护且经得起使用的物件。保持清楚的动线和恰当的空白，让简单、顺手的状态长久维持。' },
+};
+const DRIFTER_AESTHETIC = '如果你对美感也有明确要求，可以从最常看到和使用的地方入手，照顾家具之间的视觉协调，不必为了松弛而放弃喜欢的画面。';
+
+// 让家更像你：人格原则 + Q5×Q6 共用段落
+const PRINCIPLE = {
+  '自由派':'让家更贴近你，不必突然变得有条条框框；从最影响日常感受的地方慢慢开始就好。',
+  '质感派':'无论怎样营造属于自己的归属感，都可以把使用体验和整体视觉感受放在一起考虑。',
+  '务实者':'从每天真正会用到的空间入手，让改变顺手、简单，也尽量减少不必要的维护。',
+  '美学家':'回应个人需要的同时，也照顾整体视觉关系，让每一处安排都自然融入你认同的空间画面。',
+  '大管家':'无论想怎样使用空间，都要让物品和活动有合适的归属，保持生活中的便利与秩序。',
+  '有品味的大管家':'把个人需要纳入整体安排，同时兼顾秩序、便利与视觉上的协调。',
+  '编辑者':'把空间留给真正重要的需求，让每件留下的东西都值得，留白同样可以有意义。',
+  '简约派':'无论怎样回应自己的需求，都不必牺牲你珍惜的简洁与开阔。',
+};
+const YOURS = {
+  AA:'为自己保留一处相对不受打扰的领域，面积不一定大，但要能让你自在地恢复节奏。对有个人意义的物品，有的可以放在日常看得见的地方，有的更适合妥善收藏。关键是让它们在生活中得到合适的安放，不必都摆出来。',
+  AB:'为独处和放松留一个舒适的去处，设计时关注整体感官体验：光线能否随需要调整，材质的触感是否舒服，声音与温度是否让人自在。这些体验的组合，可能比某一件家具更能影响你在家的放松程度。',
+  BA:'先考虑怎样让亲近的人能够自然停留、自在交流。对于有意义的物品，可以区分哪些记录着共同经历、哪些属于更私人的故事，再分别为它们寻找适当的位置。重要的是让这些记忆自然融入生活，而不强求全部展示。',
+  BB:'让亲近的人能够自在相处的区域具有足够的舒适度，交流与陪伴才更容易自然发生。同时关注空间的整体感受：光线的层次、材质的触感、声音、温度和坐下来的舒适程度，共同营造让人愿意停留的氛围。',
+};
+
+// 显示用人格名（大管家按判定表区分有品味子版本）
+function displayType(type, ans) {
+  return (type === '大管家' && isPinweiGuanjia(ans)) ? '有品味的大管家' : type;
+}
+
+function getContent(type, ans) {
+  const key = displayType(type, ans);
+  const about = ABOUT[key];
+  let desc = about.desc;
+  if (key === '简约派' && ans.q2 === 'A') desc += MINIMALIST_Q2A;
+  let direction = DIRECTION[key][ans.q7];
+  if (key === '自由派' && (ans.q3 === 'B' || ans.q4 === 'B')) direction += '\n\n' + DRIFTER_AESTHETIC;
+  return {
+    name: key,
+    anchor: about.anchor,
+    desc,
+    relation: RELATION[ans.q5 + ans.q6 + ans.q7],
+    direction,
+    yours: PRINCIPLE[key] + '\n\n' + YOURS[ans.q5 + ans.q6],
+  };
+}
+
+// ── 监听选项 ─────────────────────────────────────────
+document.querySelectorAll('input[type="radio"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const name = radio.name;
+    document.querySelectorAll(`label`).forEach(l => {
+      if (l.querySelector(`input[name="${name}"]`)) l.classList.remove('selected');
+    });
+    radio.closest('label').classList.add('selected');
+    checkReady();
+  });
+});
+
+function checkReady() {
+  const answered = ['q1','q2','q3','q4','q5','q6','q7'].every(q =>
+    document.querySelector(`input[name="${q}"]:checked`)
+  );
+  document.getElementById('calc-btn').disabled = !answered;
+}
+
+// ── 计算 ─────────────────────────────────────────────
+function calculate() {
+  const ans = {};
+  ['q1','q2','q3','q4','q5','q6','q7'].forEach(q => {
+    ans[q] = document.querySelector(`input[name="${q}"]:checked`).value;
+  });
+
+  const { topType } = computeResult(ans);
+  const content = getContent(topType, ans);
+
+  document.getElementById('res-watermark').textContent = WATERMARKS[topType] || '';
+  document.getElementById('res-name').textContent = content.name;
+
+  const enNames = {
+    '有品味的大管家':'The Organiser with Taste',
+    '自由派':'The Drifter', '质感派':'The Selector', '务实者':'The Pragmatist',
+    '美学家':'The Aesthete', '大管家':'The Organiser', '编辑者':'The Editor', '简约派':'The Minimalist'
+  };
+  document.getElementById('res-en').textContent = enNames[content.name] || '';
+  document.getElementById('res-anchor').textContent = content.anchor;
+  const html = t => t.replace(/\n\n/g, '<br><br>');
+  document.getElementById('res-desc').innerHTML = html(content.desc);
+  document.getElementById('res-relation').innerHTML = html(content.relation);
+  document.getElementById('res-direction').innerHTML = html(content.direction);
+  document.getElementById('res-yours').innerHTML = html(content.yours);
+
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('result-section').classList.add('show');
+  window.scrollTo(0,0);
+}
+
+// ── 判定（按分类规则表，纯函数，便于穷举验证）──────────
+// 第一步：Q1、Q2 确定基础组别；第二步：Q3、Q4 在组内细分
+function computeResult(ans) {
+  const aa = ans.q3 === 'A' && ans.q4 === 'A';   // Q3、Q4 都选A
+  const bb = ans.q3 === 'B' && ans.q4 === 'B';   // Q3、Q4 都选B
+  let topType;
+  if (ans.q1 === 'C') {                     // 编辑者 / 简约派组
+    topType = aa ? '简约派' : '编辑者';
+  } else if (ans.q2 === 'B' && ans.q1 === 'A') {   // 自由派组
+    topType = '自由派';
+  } else if (ans.q2 === 'B') {              // 质感派 / 务实者组（Q1=B）
+    topType = aa ? '务实者' : '质感派';
+  } else {                                  // 美学家 / 大管家组（Q2=A，Q1=A或B）
+    topType = bb ? '美学家' : '大管家';
+  }
+  return { topType };
+}
+
+function reset() {
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+  document.getElementById('calc-btn').disabled = true;
+  document.getElementById('form-section').style.display = 'block';
+  document.getElementById('result-section').classList.remove('show');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

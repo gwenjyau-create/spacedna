@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space DNA · SYP Homes</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, Georgia, sans-serif;
+  background: #F5EFE6;
+  color: #2C2420;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+.container { max-width: 580px; margin: 0 auto; }
+
+/* HEADER */
+.header { text-align: center; margin-bottom: 2.5rem; }
+.header-label { font-size: 9px; color: #C4A45A; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.header h1 { font-size: 28px; font-weight: 300; letter-spacing: -0.5px; color: #1E1610; margin-bottom: 0.5rem; }
+.header-divider { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0.75rem 0; }
+.header-divider-line { height: 0.5px; width: 40px; background: #C4A45A; }
+.header-divider-diamond { width: 4px; height: 4px; background: #C4A45A; transform: rotate(45deg); }
+.header p { font-size: 11px; color: #9A8F82; line-height: 1.7; }
+
+/* QUESTION CARD */
+.card {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.q-num { font-size: 8px; color: #C4A45A; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+.q-title { font-size: 14px; font-weight: 500; color: #1E1610; margin-bottom: 4px; }
+.q-sub { font-size: 11px; color: #9A8F82; margin-bottom: 14px; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 14px;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  transition: all 0.15s;
+  font-size: 12px;
+  color: #3C2E20;
+  line-height: 1.5;
+}
+label:hover { background: #FAF6F0; border-color: #C4A45A; }
+label.selected { background: #F0E8D8; border-color: #C4A45A; }
+input[type="radio"] { margin-top: 2px; accent-color: #C4A45A; flex-shrink: 0; }
+.option-key { font-weight: 600; color: #C4A45A; min-width: 14px; font-size: 11px; }
+
+/* BUTTON */
+.btn-wrap { margin-top: 1rem; }
+button {
+  width: 100%;
+  padding: 14px;
+  background: #2C2420;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.05em;
+  transition: background 0.15s;
+}
+button:hover { background: #3C3430; }
+button:disabled { background: #C8BFB5; cursor: not-allowed; }
+.btn-reset {
+  background: transparent;
+  border: 0.5px solid #D9D0C4;
+  color: #9A8F82;
+  margin-top: 0.5rem;
+}
+.btn-reset:hover { background: #FAF6F0; color: #2C2420; }
+
+/* RESULT */
+.result { display: none; }
+.result.show { display: block; }
+
+.result-hero {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 2.5rem 2rem 2rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.result-watermark {
+  position: absolute;
+  bottom: -15px;
+  right: -5px;
+  font-size: 140px;
+  font-weight: 700;
+  color: #C4A45A;
+  opacity: 0.05;
+  line-height: 1;
+  pointer-events: none;
+  font-family: Georgia, serif;
+  letter-spacing: -8px;
+}
+.result-opening {
+  font-size: 10px;
+  color: #8A7860;
+  line-height: 1.8;
+  margin-bottom: 1.75rem;
+  padding: 0.75rem 1rem;
+  border-left: 2px solid #C4A45A;
+  background: #F7F3EE;
+  font-style: italic;
+}
+.result-header-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.75rem;
+}
+.result-header-divider-line { height: 0.5px; flex: 1; background: #C4A45A; }
+.result-header-label { font-size: 8px; color: #C4A45A; letter-spacing: 0.2em; text-transform: uppercase; white-space: nowrap; }
+.result-type-name { font-size: 40px; font-weight: 300; color: #1E1610; margin-bottom: 2px; line-height: 1.1; letter-spacing: -0.5px; }
+.result-type-en { font-size: 11px; color: #B8A070; margin-bottom: 1.75rem; letter-spacing: 0.12em; }
+.result-accent { width: 28px; height: 2px; background: #C4A45A; margin-bottom: 1.25rem; }
+.result-anchor { font-size: 16px; font-style: italic; color: #7A5C2E; line-height: 1.7; font-weight: 300; }
+
+.result-cta {
+  background: white;
+  border: 0.5px solid #C4A45A;
+  border-radius: 2px;
+  padding: 1.5rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+.result-cta-text {
+  font-size: 13px;
+  font-style: italic;
+  color: #7A5C2E;
+  margin-bottom: 0.9rem;
+  font-family: Georgia, serif;
+}
+.result-cta-btn {
+  display: inline-block;
+  padding: 10px 28px;
+  border: 0.5px solid #2C2420;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #2C2420;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: all 0.15s;
+}
+.result-cta-btn:hover { background: #2C2420; color: #F5EFE6; }
+
+.result-section {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.result-section-label { font-size: 8px; color: #C4A45A; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 8px; }
+.result-section-text { font-size: 13px; color: #3C2E20; line-height: 1.9; }
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #D9D0C4;
+  margin-bottom: 0.75rem;
+}
+.result-grid-cell {
+  background: white;
+  padding: 1.25rem;
+}
+.result-grid-cell .result-section-label { margin-bottom: 8px; }
+.result-grid-cell .result-section-text { font-size: 12px; }
+
+.scores {
+  background: white;
+  border: 0.5px solid #D9D0C4;
+  border-radius: 2px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.scores-title { font-size: 10px; color: #9A8F82; margin-bottom: 10px; }
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 0.5px solid #F0EBE3;
+  font-size: 12px;
+}
+.score-row:last-child { border-bottom: none; }
+.score-row.top { font-weight: 600; color: #1E1610; }
+.score-val { color: #C4A45A; font-weight: 600; min-width: 30px; text-align: right; }
+
+.result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 1rem 0;
+}
+.result-footer-line { height: 0.5px; width: 40px; background: #D9D0C4; }
+.result-footer-dot { width: 3px; height: 3px; background: #D9D0C4; border-radius: 50%; }
+
+.footer { text-align: center; font-size: 9px; color: #B8A898; margin-top: 2rem; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-label">SYP Homes</div>
+    <h1>Space DNA</h1>
+    <div class="header-divider">
+      <div class="header-divider-line"></div>
+      <div class="header-divider-diamond"></div>
+      <div class="header-divider-line"></div>
+    </div>
+    <p>The home that feels right isn't about style — it's about your natural relationship with space.</p>
+  </div>
+
+  <div id="form-section">
+    <div class="card">
+      <div class="q-num">Q1 · Amount</div>
+      <div class="q-title">When it comes to how much stuff is in your home, what feels right to you?</div>
+      <div class="options" id="q1">
+        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>More is fine — if there's more, there's more</label>
+        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>Just the right amount — when something comes in, something goes out</label>
+        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>The less the better, I feel more comfortable with less</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q2 · Tolerance</div>
+      <div class="q-title">When your home gets messy, you:</div>
+      <div class="options" id="q2">
+        <label><input type="radio" name="q2" value="A"><span class="option-key">A</span>Find it hard to ignore — it really affects my mood</label>
+        <label><input type="radio" name="q2" value="B"><span class="option-key">B</span>Don't mind much — tidy is nice, but mess doesn't bother me</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q3 · Buying</div>
+      <div class="q-title">You need to add something to your home. You've found one that works well and is reasonably priced, but it looks ordinary. You:</div>
+      <div class="options" id="q3">
+        <label><input type="radio" name="q3" value="A"><span class="option-key">A</span>Buy it now. Working well and a fair price matter most — looking good is a bonus, and ordinary is fine</label>
+        <label><input type="radio" name="q3" value="B"><span class="option-key">B</span>Hold off. I'd rather go without for now and take my time looking, so I can find something whose look truly suits my taste</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q4 · Noticing</div>
+      <div class="q-title">A piece of furniture at home has always worked well and doesn't look bad, but it never quite sits right with what's around it. Which is closer to how you feel?</div>
+      <div class="options" id="q4">
+        <label><input type="radio" name="q4" value="A"><span class="option-key">A</span>I'd notice, but as long as the home is comfortable and works smoothly, it usually doesn't stay on my mind</label>
+        <label><input type="radio" name="q4" value="B"><span class="option-key">B</span>Even though it doesn't affect use at all, that slight mismatch keeps catching my eye and is hard to ignore</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q5 · Meaning</div>
+      <div class="q-title">What makes home feel most meaningful to you?</div>
+      <div class="options" id="q5">
+        <label><input type="radio" name="q5" value="A"><span class="option-key">A</span>Having a space of my own where I can unwind and recharge at my own pace, without interruption</label>
+        <label><input type="radio" name="q5" value="B"><span class="option-key">B</span>Having a place where the people close to me naturally come together to share everyday moments and enjoy each other's company</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q6 · Connection</div>
+      <div class="q-title">What helps you feel connected to a space?</div>
+      <div class="options" id="q6">
+        <label><input type="radio" name="q6" value="A"><span class="option-key">A</span>Having things around me that hold personal memories, such as photos or souvenirs from my travels. These familiar traces are what make it feel like home</label>
+        <label><input type="radio" name="q6" value="B"><span class="option-key">B</span>The feel of the space itself, such as the lighting, textures and warmth. Simply being there puts me at ease; it doesn't depend on any particular belongings</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="q-num">Q7 · Relationship with change</div>
+      <div class="q-title">Your relationship with your home is more like:</div>
+      <div class="options" id="q7">
+        <label><input type="radio" name="q7" value="A"><span class="option-key">A</span>Always tweaking — refreshing things to keep it feeling new</label>
+        <label><input type="radio" name="q7" value="B"><span class="option-key">B</span>Finding what's right and keeping it — good things get better with time</label>
+      </div>
+    </div>
+
+    <div class="btn-wrap">
+      <button id="calc-btn" onclick="calculate()" disabled>Discover my Space DNA</button>
+    </div>
+  </div>
+
+  <div class="result" id="result-section">
+    <div class="result-hero">
+      <div class="result-watermark" id="res-watermark"></div>
+      <div class="result-opening">This isn't what your home looks like now, or what you wish it were. This is your natural relationship with space — what kind of home you instinctively need to feel right.</div>
+      <div class="result-header-divider">
+        <div class="result-header-divider-line"></div>
+        <div class="result-header-label">SYP Homes · Space DNA</div>
+        <div class="result-header-divider-line"></div>
+      </div>
+      <div class="result-type-name" id="res-name"></div>
+      <div class="result-type-en" id="res-en"></div>
+      <div class="result-accent"></div>
+      <div class="result-anchor" id="res-anchor"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-label">About You</div>
+      <div class="result-section-text" id="res-desc"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-label">Your Relationship with Home</div>
+      <div class="result-section-text" id="res-relation"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-label">Design Direction</div>
+      <div class="result-section-text" id="res-direction"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-label">Making It Yours</div>
+      <div class="result-section-text" id="res-yours"></div>
+    </div>
+
+    <div class="result-cta">
+      <div class="result-cta-text">Want to make your home feel more like you?</div>
+      <a href="https://www.syphomes.com/find-your-starting-point" class="result-cta-btn" target="_blank">Find Your Starting Point</a>
+    </div>
+
+    <div class="result-footer">
+      <div class="result-footer-line"></div>
+      <div class="result-footer-dot"></div>
+      <div class="result-footer-line"></div>
+    </div>
+
+    <button class="btn-reset" onclick="reset()">Start over</button>
+  </div>
+
+  <div class="footer">Space DNA · SYP Homes · syphomes.com</div>
+</div>
+
+<script>
+// ── 打分矩阵 ─────────────────────────────────────────
+
+// 有品味的大管家：在意乱组里，Q3=B 或 Q4=B 只满足其一（两者都选B是美学家）
+function isPinweiGuanjia(ans) {
+  return ans.q3 === 'B' || ans.q4 === 'B';
+}
+
+// ── 水印字母 ─────────────────────────────────────────
+const WATERMARKS = {
+  '自由派':'D', '质感派':'S', '务实者':'P',
+  '美学家':'A', '大管家':'O', '编辑者':'E', '简约派':'M'
+};
+
+// ── 结果文案（2026-10 修订版）────────────────────────
+// 你是谁：人格（Q1–Q4）
+const ABOUT = {
+ "自由派": {
+  "anchor": "A bit more stuff, a bit of mess — neither is really a problem.",
+  "desc": "For you, home is a place to relax and simply live, without having to keep on top of it all the time. Having a few more things, or leaving them a little casually placed, usually doesn't bother you much. You'd rather put your energy into life itself than into keeping everything tidy. Home can show the traces of everyday living — as long as they don't stop you living comfortably, there's no need for everything to be just so."
+ },
+ "质感派": {
+  "anchor": "Function and beauty — both matter to you.",
+  "desc": "You like to keep the things in your home to a sensible amount. It doesn't need to be tidy all the time, but you have your own standards for both quality of life and how things look. When choosing something, you consider whether it works well, and also whether it sits well with the rest of the space. For you, home can be relaxed without losing its sense of quality; function and beauty both deserve to be taken seriously."
+ },
+ "务实者": {
+  "anchor": "A home that works is a home that's right.",
+  "desc": "You want your home to be comfortable and everyday life to run smoothly. Looking good is a bonus, but it doesn't need to be a requirement for every choice. As long as things work well, are reasonably priced and life runs smoothly overall, you don't need to agonise over appearances. Above all, home should naturally serve your everyday life."
+ },
+ "美学家": {
+  "anchor": "For you, beauty is a basic need of everyday life.",
+  "desc": "You are especially sensitive to how a space looks. From the shape of furniture and the relationship between materials to how everything comes together, you find it hard to overlook details that don't sit right; even when they don't affect use at all, they can keep drawing your eye. Mess, too, easily interrupts how you experience a space. You want your home to be not only comfortable and practical, but genuinely in line with your own sense of beauty."
+ },
+ "大管家": {
+  "anchor": "Everything in its place — that's what keeps life in order.",
+  "desc": "You care a great deal about comfort, practicality and order at home. For you, the key is that everything has the right place — easy to find, easy to put back — so that daily life runs smoothly. Rather than deliberating over appearances, a home that works well and is tidy and well organised is what lets you feel truly settled."
+ },
+ "有品味的大管家": {
+  "anchor": "Everything in order — and always with taste.",
+  "desc": "You value comfort, practicality and order at home, and you don't overlook visual appeal either. You might spend extra time finding something that looks right, or you might be quite sensitive to things that don't quite go together; but you usually weigh beauty alongside convenience, quality and practical needs. A home that's comfortable to live in, well ordered and pleasing to the eye is what lets you truly enjoy everyday life."
+ },
+ "编辑者": {
+  "anchor": "Less, but always the right things. That's both a choice and a skill.",
+  "desc": "You prefer a space with fewer things, chosen with intention. What stays doesn't need to be much, but it needs a reason to be there: perhaps because it works well, perhaps because it looks right to you, or perhaps because it holds special meaning for you. You care about what to keep and what to let go, and about the relationship between objects and empty space. For you, the more clearly your home expresses what you need, the less it has to rely on quantity to feel full."
+ },
+ "简约派": {
+  "anchor": "Less. That's just right.",
+  "desc": "You don't need many things. A space that stays clear and is simple and easy to use day to day makes you feel more at ease. You'd rather focus on the things and activities you truly need than keep adding more. Home is a place where you can put down what weighs on you and live lightly."
+ }
+};
+const MINIMALIST_Q2A = "You're also more bothered by mess; when everything has its place and the view is clear again, you feel even more at ease.";
+
+// Your Relationship with Home: Q5×Q6×Q7, shared by all types
+const RELATION = {
+ "AAA": "For you, an important part of what home means is having a place where you can relax at your own pace and gradually recover. Familiar things play a special role here: a photo, or a small keepsake brought back from a trip, can often give a space more of a sense of you. You also like to let your home change gradually with your life, and the choices you make at different times keep the space close to who you are now.",
+ "AAB": "For you, home is very much a place where you can set aside the world's demands for a while and return to your own rhythm. Things that carry memories are an important connection between you and your space; seeing them gives you a reassuring sense of having come home. You tend to build a long-term relationship with your home, letting a familiar arrangement and belongings that have been with you for years build up a sense of closeness over time.",
+ "ABA": "For you, much of what home means comes from time alone: undisturbed, relaxing and recovering at your own pace. What puts you at ease is often the feel of the space itself: the way the light falls, the texture of materials, whether the temperature is just right. You also enjoy keeping that feeling fresh, adjusting a few details with the seasons or the rhythm of life, so your home keeps fitting who you are now.",
+ "ABB": "For you, home is where you slow down and restore your energy. Your sense of a space comes more from its overall atmosphere: when the light, textures and temperature are right, you naturally relax, without relying much on any particular object. Once you've found what suits you, you'd rather let that comfort carry on for a long time; a familiar setting puts you at ease too.",
+ "BAA": "For you, what home means is inseparable from the people close to you; the everyday moments spent together give the space its warmth. The things that carry memories — some recording times shared with others, some belonging to your own story — all give this home its own particular meaning. You also like your home to move forward with your life, changing its look as new experiences and new stages of life come along.",
+ "BAB": "For you, much of what makes home meaningful is that the people close to you can gather and share everyday life there. Things that carry memories connect you with your space: they record the times you've lived through and hold the stories you share with the people who matter to you. You treasure the familiarity that slowly takes shape at home, letting these stories carry on as life goes on.",
+ "BBA": "For you, what home means lies in sharing everyday life with the people close to you and simply being together. What puts you at ease is the feel of the space itself: when the light, textures and temperature are right, people are more inclined to stay. You also like to keep that atmosphere flowing, adjusting it with the seasons and the changes in life, so the space keeps gaining new energy.",
+ "BBB": "For you, home is where the people close to you can naturally gather and share everyday life. Your sense of home comes more from its overall atmosphere than from any particular object. When the light, textures and temperature are just right, time spent together feels more at ease too. Once the space feels right, you'd rather let that familiarity and comfort carry on gradually."
+};
+
+// Design Direction: type + Q7
+const DIRECTION = {
+ "自由派": {
+  "A": "Keep the things you use often where they're easy to reach; storage doesn't need to be complicated, and leave some room for life to shift. You don't need to manage everything strictly — as long as the important things are easy to do, your home can stay relaxed.",
+  "B": "Take the time to get the furniture and everyday items you use most right, favouring options that are durable and easy to maintain. Things that suit you last longer, and they also cut down on repeat buying and tidying."
+ },
+ "质感派": {
+  "A": "Let key furniture and the overall colour palette form a stable foundation, and leave room to adjust smaller items and details. If each change considers both ease of use and visual harmony, your home can stay fresh without losing its sense of cohesion.",
+  "B": "Focus your energy on the key pieces you'll use for a long time and that shape how the whole space looks. Choose with both function and lasting appeal in mind; get the foundations right, and you won't need to keep adjusting later."
+ },
+ "务实者": {
+  "A": "First make your daily routes and routines flow smoothly, then leave some flexibility for adjusting parts of the space. There's no need for a major overhaul — small changes can keep life convenient and feeling fresh.",
+  "B": "Prioritise furniture that is the right size, comfortable, durable and easy to maintain. Thinking through your key needs properly once suits you better than replacing things for the sake of style."
+ },
+ "美学家": {
+  "A": "First build a harmonious visual foundation for the whole space, then let materials, objects and details change with your taste. Change can happen without breaking up the overall beauty.",
+  "B": "Put your time and budget into the elements that truly shape how the whole space looks, such as the proportions of key furniture, the relationships between materials, and the harmony between light and backdrop. Once you've found an effect you're happy with, it's worth keeping for the long term."
+ },
+ "大管家": {
+  "A": "Set up storage and ways of putting things away that can adapt as life changes. The point is to make things easy to find and easy to return, not to add more steps to tidying. That way, when life changes, order can keep up.",
+  "B": "Give everyday items clear, stable places so that taking them out and putting them back is effortless. An easy-to-manage system doesn't have to be complicated; what matters is that it fits naturally into daily life."
+ },
+ "有品味的大管家": {
+  "A": "Keep storage and the way you move through the space flexible, adjusting them as life changes, while paying attention to how key pieces of furniture go together. Practicality, tidiness and visual harmony can all be balanced within the same arrangement.",
+  "B": "Think through your daily routes and how things are put away once and thoroughly, then carefully choose the key pieces you'll use for years. Balancing quality, durability and how the space looks gives you a home that stands the test of time and is easy to live in."
+ },
+ "编辑者": {
+  "A": "Keep a clear sense of hierarchy and some empty space, leaving room for a few key pieces to speak. When you want a change, there's no need to add much; moving or replacing one focal point can refresh the whole space.",
+  "B": "Let furniture, materials and empty space form a stable whole. Choose what truly suits you with care and give it a lasting place; without frequent change, the space can keep its own character."
+ },
+ "简约派": {
+  "A": "Choose larger pieces for durability, sufficiency and simplicity, and leave some room to adjust the details. When you want a change, start small, so the space doesn't slowly fill up with new things.",
+  "B": "Choose pieces that meet your needs, are easy to maintain and stand up to everyday use. Keep clear routes through the space and the right amount of empty space, so that a simple, easy state lasts."
+ }
+};
+const DRIFTER_AESTHETIC = "If you also have clear expectations about how things look, start with the places you see and use most, paying attention to how pieces of furniture sit together visually — there's no need to give up the look you love for the sake of being relaxed.";
+
+// Making It Yours: type principle + shared Q5×Q6 paragraph
+const PRINCIPLE = {
+ "自由派": "Making your home more like you doesn't mean suddenly living by rules; just start gradually with whatever affects your day-to-day feelings most.",
+ "质感派": "However you create your own sense of belonging, you can consider how things work and how the whole space looks together.",
+ "务实者": "Start with the spaces you genuinely use every day, keep changes easy and simple, and avoid unnecessary upkeep where you can.",
+ "美学家": "While responding to your personal needs, also look after the overall visual relationships, so that every arrangement blends naturally into the picture of the space you believe in.",
+ "大管家": "However you want to use your space, give belongings and activities a proper place, keeping everyday life convenient and orderly.",
+ "有品味的大管家": "Bring your personal needs into the overall arrangement, balancing order, convenience and visual harmony.",
+ "编辑者": "Keep space for the needs that truly matter, so that everything that stays is worth it; empty space can be meaningful too.",
+ "简约派": "However you respond to your own needs, you never have to give up the simplicity and openness you value."
+};
+const YOURS = {
+ "AA": "Keep an area of your home relatively undisturbed for yourself. It doesn't need to be large, but it should let you get back to your own rhythm with ease. As for things with personal meaning, some can sit where you see them every day, while others are better kept safely away. The key is to give them a proper place in your life; they don't all need to be on display.",
+ "AB": "Make a comfortable place for solitude and relaxation, and when designing it, pay attention to the overall sensory experience: whether the lighting can be adjusted as you need, whether materials feel good to the touch, whether sound and temperature put you at ease. Together, these experiences may shape how relaxed you feel at home more than any single piece of furniture.",
+ "BA": "Start by considering how the people close to you can naturally linger and talk with ease. As for meaningful things, you might distinguish between those that record shared experiences and those that belong to more personal stories, then find a suitable place for each. What matters is letting these memories blend naturally into everyday life, without insisting that everything be on display.",
+ "BB": "Make sure the areas where the people close to you spend time together are comfortable enough, so that conversation and company come about more naturally. At the same time, pay attention to how the space feels as a whole: layers of light, the texture of materials, sound, temperature and how comfortable it is to sit down all work together to create an atmosphere that makes people want to stay."
+};
+
+const EN_NAMES = {
+  '自由派':'The Drifter', '质感派':'The Selector', '务实者':'The Pragmatist', '美学家':'The Aesthete',
+  '大管家':'The Organiser', '有品味的大管家':'The Organiser with Taste', '编辑者':'The Editor', '简约派':'The Minimalist'
+};
+
+// 显示用人格名（大管家按判定表区分有品味子版本）
+function displayType(type, ans) {
+  return (type === '大管家' && isPinweiGuanjia(ans)) ? '有品味的大管家' : type;
+}
+
+function getContent(type, ans) {
+  const key = displayType(type, ans);
+  const about = ABOUT[key];
+  let desc = about.desc;
+  if (key === '简约派' && ans.q2 === 'A') desc += ' ' + MINIMALIST_Q2A;
+  let direction = DIRECTION[key][ans.q7];
+  if (key === '自由派' && (ans.q3 === 'B' || ans.q4 === 'B')) direction += '\n\n' + DRIFTER_AESTHETIC;
+  return {
+    name: key,
+    anchor: about.anchor,
+    desc,
+    relation: RELATION[ans.q5 + ans.q6 + ans.q7],
+    direction,
+    yours: PRINCIPLE[key] + '\n\n' + YOURS[ans.q5 + ans.q6],
+  };
+}
+
+// ── 监听选项 ─────────────────────────────────────────
+document.querySelectorAll('input[type="radio"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const name = radio.name;
+    document.querySelectorAll(`label`).forEach(l => {
+      if (l.querySelector(`input[name="${name}"]`)) l.classList.remove('selected');
+    });
+    radio.closest('label').classList.add('selected');
+    checkReady();
+  });
+});
+
+function checkReady() {
+  const answered = ['q1','q2','q3','q4','q5','q6','q7'].every(q =>
+    document.querySelector(`input[name="${q}"]:checked`)
+  );
+  document.getElementById('calc-btn').disabled = !answered;
+}
+
+// ── 计算 ─────────────────────────────────────────────
+function calculate() {
+  const ans = {};
+  ['q1','q2','q3','q4','q5','q6','q7'].forEach(q => {
+    ans[q] = document.querySelector(`input[name="${q}"]:checked`).value;
+  });
+
+  const { topType } = computeResult(ans);
+  const content = getContent(topType, ans);
+
+  document.getElementById('res-watermark').textContent = WATERMARKS[topType] || '';
+  document.getElementById('res-name').textContent = EN_NAMES[content.name];
+
+  const enNames = {
+    '有品味的大管家':'The Organiser with Taste',
+    '自由派':'The Drifter', '质感派':'The Selector', '务实者':'The Pragmatist',
+    '美学家':'The Aesthete', '大管家':'The Organiser', '编辑者':'The Editor', '简约派':'The Minimalist'
+  };
+  document.getElementById('res-en').textContent = '';
+  document.getElementById('res-anchor').textContent = content.anchor;
+  const html = t => t.replace(/\n\n/g, '<br><br>');
+  document.getElementById('res-desc').innerHTML = html(content.desc);
+  document.getElementById('res-relation').innerHTML = html(content.relation);
+  document.getElementById('res-direction').innerHTML = html(content.direction);
+  document.getElementById('res-yours').innerHTML = html(content.yours);
+
+  document.getElementById('form-section').style.display = 'none';
+  document.getElementById('result-section').classList.add('show');
+  window.scrollTo(0,0);
+}
+
+// ── 判定（按分类规则表，纯函数，便于穷举验证）──────────
+// 第一步：Q1、Q2 确定基础组别；第二步：Q3、Q4 在组内细分
+function computeResult(ans) {
+  const aa = ans.q3 === 'A' && ans.q4 === 'A';   // Q3、Q4 都选A
+  const bb = ans.q3 === 'B' && ans.q4 === 'B';   // Q3、Q4 都选B
+  let topType;
+  if (ans.q1 === 'C') {                     // 编辑者 / 简约派组
+    topType = aa ? '简约派' : '编辑者';
+  } else if (ans.q2 === 'B' && ans.q1 === 'A') {   // 自由派组
+    topType = '自由派';
+  } else if (ans.q2 === 'B') {              // 质感派 / 务实者组（Q1=B）
+    topType = aa ? '务实者' : '质感派';
+  } else {                                  // 美学家 / 大管家组（Q2=A，Q1=A或B）
+    topType = bb ? '美学家' : '大管家';
+  }
+  return { topType };
+}
+
+function reset() {
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+  document.getElementById('calc-btn').disabled = true;
+  document.getElementById('form-section').style.display = 'block';
+  document.getElementById('result-section').classList.remove('show');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
