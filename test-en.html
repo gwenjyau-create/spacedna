@@ -230,11 +230,11 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
   <div id="form-section">
     <div class="card">
       <div class="q-num">Q1 · Amount</div>
-      <div class="q-title">When it comes to how much stuff is in your home, what feels right to you?</div>
+      <div class="q-title">When it comes to how much stuff is in your home, which is closer to you?</div>
       <div class="options" id="q1">
-        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>More is fine — if there's more, there's more</label>
-        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>Just the right amount — when something comes in, something goes out</label>
-        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>The less the better, I feel more comfortable with less</label>
+        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>More is fine — if there's more, there's more; it doesn't really bother me</label>
+        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>Not too much, not too little — I consciously keep things in balance as things come and go</label>
+        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>I feel at ease with less — too much feels oppressive, so I actively cut back</label>
       </div>
     </div>
 
@@ -514,6 +514,22 @@ function checkReady() {
   document.getElementById('calc-btn').disabled = !answered;
 }
 
+// ── 匿名记录（只记答案、结果、语言和时间，不收集任何个人信息）──
+// 部署 Google 表格脚本后，把接收地址填在这里；留空则不记录
+const LOG_URL = '';
+function logResult(ans, resultName) {
+  if (!LOG_URL) return;
+  try {
+    const payload = Object.assign({ lang: document.documentElement.lang || '', result: resultName }, ans);
+    fetch(LOG_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  } catch (e) { /* 记录失败不影响显示结果 */ }
+}
+
 // ── 计算 ─────────────────────────────────────────────
 function calculate() {
   const ans = {};
@@ -539,6 +555,8 @@ function calculate() {
   document.getElementById('res-relation').innerHTML = html(content.relation);
   document.getElementById('res-direction').innerHTML = html(content.direction);
   document.getElementById('res-yours').innerHTML = html(content.yours);
+
+  logResult(ans, content.name);
 
   document.getElementById('form-section').style.display = 'none';
   document.getElementById('result-section').classList.add('show');

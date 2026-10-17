@@ -230,11 +230,11 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
   <div id="form-section">
     <div class="card">
       <div class="q-num">Q1 · 数量感受</div>
-      <div class="q-title">家里的东西，你希望是什么状态？</div>
+      <div class="q-title">家里东西的多少，你更接近哪种状态？</div>
       <div class="options" id="q1">
-        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>多一些没关系，多了就多了</label>
-        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>不多不少，有进有出</label>
-        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>少一些比较好，少了才舒服</label>
+        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>多一些没关系，多了就多了，不太影响我</label>
+        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>不多不少，我会有意识地有进有出，保持平衡</label>
+        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>少了才自在，多了会觉得压迫，我会主动减少</label>
       </div>
     </div>
 
@@ -477,6 +477,22 @@ function checkReady() {
   document.getElementById('calc-btn').disabled = !answered;
 }
 
+// ── 匿名记录（只记答案、结果、语言和时间，不收集任何个人信息）──
+// 部署 Google 表格脚本后，把接收地址填在这里；留空则不记录
+const LOG_URL = '';
+function logResult(ans, resultName) {
+  if (!LOG_URL) return;
+  try {
+    const payload = Object.assign({ lang: document.documentElement.lang || '', result: resultName }, ans);
+    fetch(LOG_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  } catch (e) { /* 记录失败不影响显示结果 */ }
+}
+
 // ── 计算 ─────────────────────────────────────────────
 function calculate() {
   const ans = {};
@@ -502,6 +518,8 @@ function calculate() {
   document.getElementById('res-relation').innerHTML = html(content.relation);
   document.getElementById('res-direction').innerHTML = html(content.direction);
   document.getElementById('res-yours').innerHTML = html(content.yours);
+
+  logResult(ans, content.name);
 
   document.getElementById('form-section').style.display = 'none';
   document.getElementById('result-section').classList.add('show');
