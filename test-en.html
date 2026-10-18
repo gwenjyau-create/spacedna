@@ -230,35 +230,35 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
   <div id="form-section">
     <div class="card">
       <div class="q-num">Q1 · Amount</div>
-      <div class="q-title">When it comes to how much stuff is in your home, which is closer to you?</div>
+      <div class="q-title">How does the number of things in your home affect how you feel?</div>
       <div class="options" id="q1">
-        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>More is fine — if there's more, there's more; it doesn't really bother me</label>
-        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>Not too much, not too little — I consciously keep things in balance as things come and go</label>
-        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>I feel at ease with less — too much feels oppressive, so I actively cut back</label>
+        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>Not much — even having lots of things around is fine with me</label>
+        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>It doesn't need to be minimal, but it can't be too much — I consciously keep it in check</label>
+        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>I need fewer things around me — even a little too much feels uncomfortable, so I actively cut back</label>
       </div>
     </div>
 
     <div class="card">
       <div class="q-num">Q2 · Tolerance</div>
-      <div class="q-title">When your home gets messy, you:</div>
+      <div class="q-title">When your home gets messy, which is closer to you?</div>
       <div class="options" id="q2">
-        <label><input type="radio" name="q2" value="A"><span class="option-key">A</span>Find it hard to ignore — it really affects my mood</label>
-        <label><input type="radio" name="q2" value="B"><span class="option-key">B</span>Don't mind much — tidy is nice, but mess doesn't bother me</label>
+        <label><input type="radio" name="q2" value="A"><span class="option-key">A</span>I can't stand it — it really affects my mood</label>
+        <label><input type="radio" name="q2" value="B"><span class="option-key">B</span>I don't mind much — tidy is nice, but mess doesn't really bother me</label>
       </div>
     </div>
 
     <div class="card">
       <div class="q-num">Q3 · Buying</div>
-      <div class="q-title">You need to add something to your home that you'll use regularly. You've found one that works well and is reasonably priced, but it looks ordinary. You:</div>
+      <div class="q-title">You need to add something to your home that you'll use regularly. You've found one that works well and is reasonably priced, but it looks ordinary. Which would you do?</div>
       <div class="options" id="q3">
-        <label><input type="radio" name="q3" value="A"><span class="option-key">A</span>Buy it. It works well and the price is right, so it does the job — the ordinary look doesn't matter</label>
-        <label><input type="radio" name="q3" value="B"><span class="option-key">B</span>Hold off. I'd rather put up with the inconvenience for a while and spend time looking, so I can find one whose look I really like</label>
+        <label><input type="radio" name="q3" value="A"><span class="option-key">A</span>I'd buy it. It works well and the price is right, so it does the job — the ordinary look doesn't matter</label>
+        <label><input type="radio" name="q3" value="B"><span class="option-key">B</span>I'd hold off. I'd rather put up with the inconvenience for a while and keep looking until I find one whose look I really like</label>
       </div>
     </div>
 
     <div class="card">
       <div class="q-num">Q4 · Noticing</div>
-      <div class="q-title">A piece of furniture at home has always worked well and doesn't look bad, but it never quite sits right with what's around it. Which is closer to how you feel?</div>
+      <div class="q-title">A piece of furniture at home has always worked well and doesn't look bad, but its look never quite goes with the things around it. Which is closer to how you feel?</div>
       <div class="options" id="q4">
         <label><input type="radio" name="q4" value="A"><span class="option-key">A</span>I'd notice, but as long as the home is comfortable and works smoothly, it usually doesn't stay on my mind</label>
         <label><input type="radio" name="q4" value="B"><span class="option-key">B</span>Even though it doesn't affect use at all, that slight mismatch keeps catching my eye and is hard to ignore</label>
@@ -287,8 +287,8 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
       <div class="q-num">Q7 · Relationship with change</div>
       <div class="q-title">Your relationship with your home is more like:</div>
       <div class="options" id="q7">
-        <label><input type="radio" name="q7" value="A"><span class="option-key">A</span>Always tweaking — refreshing things to keep it feeling new</label>
-        <label><input type="radio" name="q7" value="B"><span class="option-key">B</span>Finding what's right and keeping it — good things get better with time</label>
+        <label><input type="radio" name="q7" value="A"><span class="option-key">A</span>I like to change things up — adjusting them from time to time to keep my home feeling fresh</label>
+        <label><input type="radio" name="q7" value="B"><span class="option-key">B</span>Once I find what's right, I hold on to it — good things get better with time</label>
       </div>
     </div>
 
@@ -403,14 +403,14 @@ const MINIMALIST_Q2A = "You're also more bothered by mess; when everything has i
 
 // Your Relationship with Home: Q5×Q6×Q7, shared by all types
 const RELATION = {
- "AAA": "For you, an important part of what home means is having a place where you can relax at your own pace and gradually recover. Familiar things play a special role here: a photo, or a small keepsake brought back from a trip, can often give a space more of a sense of you. You also like to let your home change gradually with your life, and the choices you make at different times keep the space close to who you are now.",
- "AAB": "For you, home is very much a place where you can set aside the world's demands for a while and return to your own rhythm. Things that carry memories are an important connection between you and your space; seeing them gives you a reassuring sense of having come home. You tend to build a long-term relationship with your home, letting a familiar arrangement and belongings that have been with you for years build up a sense of closeness over time.",
- "ABA": "For you, much of what home means comes from time alone: undisturbed, relaxing and recovering at your own pace. What puts you at ease is often the feel of the space itself: the way the light falls, the texture of materials, whether the temperature is just right. You also enjoy keeping that feeling fresh, adjusting a few details with the seasons or the rhythm of life, so your home keeps fitting who you are now.",
- "ABB": "For you, home is where you slow down and restore your energy. Your sense of a space comes more from its overall atmosphere: when the light, textures and temperature are right, you naturally relax, without relying much on any particular object. Once you've found what suits you, you'd rather let that comfort carry on for a long time; a familiar setting puts you at ease too.",
- "BAA": "For you, what home means is inseparable from the people close to you; the everyday moments spent together give the space its warmth. The things that carry memories — some recording times shared with others, some belonging to your own story — all give this home its own particular meaning. You also like your home to move forward with your life, changing its look as new experiences and new stages of life come along.",
- "BAB": "For you, much of what makes home meaningful is that the people close to you can gather and share everyday life there. Things that carry memories connect you with your space: they record the times you've lived through and hold the stories you share with the people who matter to you. You treasure the familiarity that slowly takes shape at home, letting these stories carry on as life goes on.",
- "BBA": "For you, what home means lies in sharing everyday life with the people close to you and simply being together. What puts you at ease is the feel of the space itself: when the light, textures and temperature are right, people are more inclined to stay. You also like to keep that atmosphere flowing, adjusting it with the seasons and the changes in life, so the space keeps gaining new energy.",
- "BBB": "For you, home is where the people close to you can naturally gather and share everyday life. Your sense of home comes more from its overall atmosphere than from any particular object. When the light, textures and temperature are just right, time spent together feels more at ease too. Once the space feels right, you'd rather let that familiarity and comfort carry on gradually."
+ "AAA": "An important part of what home means to you is having a place where you can relax at your own pace and gradually recover. Familiar things play a special role here: a photo, or a small keepsake brought back from a trip, can often give a space more of a sense of you. You also like to let your home change gradually with your life, and the choices you make at different times keep it close to who you are now.",
+ "AAB": "Home, for you, is very much a place to set aside the world's demands for a while and return to your own rhythm. Things that carry memories are an important connection between you and your space; seeing them gives you a reassuring sense of having come home. You tend to build a long-term relationship with your home, letting a familiar arrangement and belongings that have been with you for years build up a sense of closeness over time.",
+ "ABA": "Much of what home means to you comes from time alone: undisturbed, relaxing and recovering at your own pace. What puts you at ease is often the feel of the space itself: the way the light falls, the texture of materials, whether the temperature is just right. You also enjoy keeping that feeling fresh, adjusting a few details with the seasons or the rhythm of life, so your home keeps fitting who you are now.",
+ "ABB": "Home is where you slow down and restore your energy. Your sense of a space comes more from its overall atmosphere: when the light, textures and temperature are right, you naturally relax, without relying much on any particular object. Once you've found what suits you, you'd rather let that comfort carry on for a long time; a familiar setting puts you at ease too.",
+ "BAA": "What home means to you is inseparable from those closest to you; the everyday moments spent together give the space its warmth. The things that carry memories — some recording times shared with others, some belonging to your own story — all give this home its own particular meaning. You also like your home to move forward with your life, changing its look as new experiences and new stages of life come along.",
+ "BAB": "Much of what makes home meaningful to you is that the people you love can gather and share everyday life there. Things that carry memories connect you with your space: they record the times you've lived through and hold the stories you share with the people who matter most. You treasure the familiarity that slowly takes shape at home, letting these stories carry on as life goes on.",
+ "BBA": "Home, for you, is about sharing everyday life with the people you love and simply being together. What puts you at ease is the feel of the space itself: when the light, textures and temperature are right, people are more inclined to stay. You also like to keep that atmosphere flowing, adjusting it with the seasons and the changes in life, so the space keeps gaining new energy.",
+ "BBB": "Home is a place where those closest to you can naturally gather and share everyday life. Your sense of home comes more from its overall atmosphere than from any particular object. When the light, textures and temperature are just right, time spent together feels more at ease too. Once the space feels right, you'd rather let that familiarity and comfort carry on gradually."
 };
 
 // Design Direction: type + Q7
@@ -455,7 +455,7 @@ const PRINCIPLE = {
  "自由派": "Making your home more like you doesn't mean suddenly living by rules; just start gradually with whatever affects your day-to-day feelings most.",
  "质感派": "However you create your own sense of belonging, you can consider how things work and how the whole space looks together.",
  "务实者": "Start with the spaces you genuinely use every day, keep changes easy and simple, and avoid unnecessary upkeep where you can.",
- "美学家": "While responding to your personal needs, also look after the overall visual relationships, so that every arrangement blends naturally into the picture of the space you believe in.",
+ "美学家": "While responding to your personal needs, also look after the overall visual relationships, so that every arrangement sits naturally within the overall look you're after.",
  "大管家": "However you want to use your space, give belongings and activities a proper place, keeping everyday life convenient and orderly.",
  "有品味的大管家": "Bring your personal needs into the overall arrangement, balancing order, convenience and visual harmony.",
  "编辑者": "Keep space for the needs that truly matter, so that everything that stays is worth it; empty space can be meaningful too.",
@@ -464,8 +464,8 @@ const PRINCIPLE = {
 const YOURS = {
  "AA": "Keep an area of your home relatively undisturbed for yourself. It doesn't need to be large, but it should let you get back to your own rhythm with ease. As for things with personal meaning, some can sit where you see them every day, while others are better kept safely away. The key is to give them a proper place in your life; they don't all need to be on display.",
  "AB": "Make a comfortable place for solitude and relaxation, and when designing it, pay attention to the overall sensory experience: whether the lighting can be adjusted as you need, whether materials feel good to the touch, whether sound and temperature put you at ease. Together, these experiences may shape how relaxed you feel at home more than any single piece of furniture.",
- "BA": "Start by considering how the people close to you can naturally linger and talk with ease. As for meaningful things, you might distinguish between those that record shared experiences and those that belong to more personal stories, then find a suitable place for each. What matters is letting these memories blend naturally into everyday life, without insisting that everything be on display.",
- "BB": "Make sure the areas where the people close to you spend time together are comfortable enough, so that conversation and company come about more naturally. At the same time, pay attention to how the space feels as a whole: layers of light, the texture of materials, sound, temperature and how comfortable it is to sit down all work together to create an atmosphere that makes people want to stay."
+ "BA": "Start by considering how those closest to you can naturally linger and talk with ease. As for meaningful things, you might distinguish between those that record shared experiences and those that belong to more personal stories, then find a suitable place for each. What matters is letting these memories blend naturally into everyday life, without insisting that everything be on display.",
+ "BB": "Make sure the areas where you and the people you love spend time together are comfortable enough, so that conversation and company come about more naturally. At the same time, pay attention to how the space feels as a whole: layers of light, the texture of materials, sound, temperature and how comfortable it is to sit down all work together to create an atmosphere that makes people want to stay."
 };
 
 const EN_NAMES = {
