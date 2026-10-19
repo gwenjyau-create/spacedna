@@ -123,7 +123,7 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
 }
 .result-header-divider-line { height: 0.5px; flex: 1; background: #C4A45A; }
 .result-header-label { font-size: 8px; color: #C4A45A; letter-spacing: 0.2em; text-transform: uppercase; white-space: nowrap; }
-.result-type-name { font-size: 40px; font-weight: 300; color: #1E1610; margin-bottom: 2px; line-height: 1.1; letter-spacing: -0.5px; }
+.result-type-name { overflow-wrap: break-word; font-size: clamp(29px, 8vw, 40px); font-weight: 300; color: #1E1610; margin-bottom: 2px; line-height: 1.1; letter-spacing: -0.5px; }
 .result-type-en { font-size: 11px; color: #B8A070; margin-bottom: 1.75rem; letter-spacing: 0.12em; }
 .result-accent { width: 28px; height: 2px; background: #C4A45A; margin-bottom: 1.25rem; }
 .result-anchor { font-size: 16px; font-style: italic; color: #7A5C2E; line-height: 1.7; font-weight: 300; }
@@ -213,6 +213,17 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
 .result-footer-dot { width: 3px; height: 3px; background: #D9D0C4; border-radius: 50%; }
 
 .footer { text-align: center; font-size: 9px; color: #B8A898; margin-top: 2rem; letter-spacing: 0.05em; }
+
+/* Quick preview visible locally or with ?preview=1; normal survey remains unchanged. */
+.local-preview { background: #FAF6F0; border: 1px dashed #D9D0C4; padding: 12px 14px; margin: 0 0 16px; border-radius: 2px; }
+.local-preview .preview-heading { color: #7A5C2E; font-size: 11px; margin-bottom: 6px; }
+.local-preview .preview-note { color: #9A8F82; font-size: 10px; line-height: 1.65; margin-bottom: 9px; }
+.local-preview .preview-controls { display:flex; gap:8px; align-items:center; }
+.local-preview input { font: inherit; font-size: 13px; min-width: 0; width: 132px; padding: 9px 10px; border: 1px solid #D9D0C4; background: #fff; text-transform: uppercase; letter-spacing: 0.1em; }
+.local-preview button { width: auto; flex:1; padding: 10px; font-size: 11px; }
+.local-preview .preview-examples { margin-top: 8px; display:flex; gap:12px; flex-wrap:wrap; }
+.local-preview .preview-examples a { color: #7A5C2E; font-size: 10px; text-decoration: underline; cursor: pointer; }
+.local-preview #preview-error { color: #9A4B3D; font-size: 10px; margin-top: 7px; }
 </style>
 </head>
 <body>
@@ -226,11 +237,24 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
       <div class="header-divider-diamond"></div>
       <div class="header-divider-line"></div>
     </div>
-    <p>The home that feels right isn't about style — it's about your natural relationship with space.</p>
+    <p>The home that feels right isn't about style. It's about your natural relationship with space.</p>
+  </div>
+
+
+  <!-- Visible locally or with ?preview=1 on GitHub Pages. Hidden for ordinary visitors. -->
+  <div id="local-preview" class="local-preview" style="display:none">
+    <div class="preview-heading">Quick result preview · enter a seven-letter answer code</div>
+    <div class="preview-note">For example, ABABBAB. Quick previews are not logged to Google Sheets; completing the questionnaire normally will still record a response.</div>
+    <div class="preview-controls">
+      <input id="preview-code" type="text" maxlength="7" placeholder="ABABBAB" aria-label="Seven-letter answer code" onkeydown="if(event.key==='Enter') previewResult()">
+      <button type="button" onclick="previewResult()">Preview this result</button>
+    </div>
+    <div class="preview-examples"><a onclick="previewCode('ABABBAB')">The Drifter · ABABBAB</a><a onclick="previewCode('BBABABA')">The Selector · BBABABA</a></div>
+    <div id="preview-error" role="status"></div>
   </div>
 
   <div id="form-section">
-    <p class="answer-tip">Go with your first instinct — choose what's closest to the everyday you, not what you think you 'should' choose.</p>
+    <p class="answer-tip">Go with your first instinct. Choose what's closest to the everyday you, not what you think you 'should' choose.</p>
     <div class="card">
       <div class="q-num">1 / 7</div>
       <div class="q-title">How does the number of things in your home affect how you feel?</div>
@@ -303,7 +327,7 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
   <div class="result" id="result-section">
     <div class="result-hero">
       <div class="result-watermark" id="res-watermark"></div>
-      <div class="result-opening">This isn't what your home looks like now, or what you wish it were. This is your natural relationship with space — what kind of home you instinctively need to feel right.</div>
+      <div class="result-opening">This isn't what your home looks like now, or what you wish it were. It's your natural relationship with space: what kind of home you instinctively need to feel right.</div>
       <div class="result-header-divider">
         <div class="result-header-divider-line"></div>
         <div class="result-header-label">SYP Homes · Space DNA</div>
@@ -330,13 +354,8 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
       <div class="result-section-text" id="res-direction"></div>
     </div>
 
-    <div class="result-section">
-      <div class="result-section-label">Making It Yours</div>
-      <div class="result-section-text" id="res-yours"></div>
-    </div>
-
     <div class="result-cta">
-      <div class="result-cta-text">Want to make your home feel more like you?</div>
+      <div class="result-cta-text" id="res-cta-text">Want a home that feels more like you?</div>
       <a href="https://www.syphomes.com/find-your-starting-point" class="result-cta-btn" target="_blank">Find Your Starting Point</a>
     </div>
 
@@ -372,131 +391,254 @@ const WATERMARKS = {
 // 你是谁：人格（Q1–Q4）
 const ABOUT = {
  "自由派": {
-  "anchor": "A bit more stuff, a bit of mess — neither is really a problem.",
-  "desc": "For you, home is a place to relax and simply live, without having to keep on top of it all the time. Having a few more things, or leaving them a little casually placed, usually doesn't bother you much. You'd rather put your energy into life itself than into keeping everything tidy. Home can show the traces of everyday living — as long as they don't stop you living comfortably, there's no need for everything to be just so."
+  "anchor": "More stuff, more mess? No big deal.",
+  "desc": "You're comfortable with plenty of things around you. Even when things pile up and surfaces get crowded, you may still feel perfectly at ease. What looks chaotic to someone else can feel like ordinary life to you. Home is somewhere you can get on with living, without worrying about keeping everything tidy."
  },
  "质感派": {
-  "anchor": "Function and beauty — both matter to you.",
-  "desc": "You like to keep the things in your home to a sensible amount. It doesn't need to be tidy all the time, but you have your own standards for both quality of life and how things look. When choosing something, you consider whether it works well, and also whether it sits well with the rest of the space. For you, home can be relaxed without losing its sense of quality; function and beauty both deserve to be taken seriously."
+  "anchor": "A little untidy is fine. Unattractive isn't.",
+  "desc": "You prefer a balance in how much you own, and a little mess doesn't bother you much. You're more particular about the quality and feel of your surroundings. You might wait for a piece you truly like, notice when something doesn't look right with the rest of the room, or both. Your home doesn't have to be perfectly tidy for you to appreciate its beauty."
  },
  "务实者": {
-  "anchor": "A home that works is a home that's right.",
-  "desc": "You want your home to be comfortable and everyday life to run smoothly. Looking good is a bonus, but it doesn't need to be a requirement for every choice. As long as things work well, are reasonably priced and life runs smoothly overall, you don't need to agonise over appearances. Above all, home should naturally serve your everyday life."
+  "anchor": "A home should work well before it looks beautiful.",
+  "desc": "You want home to be comfortable and easy to use. A bit of mess rarely bothers you, and appearances don't need to decide every purchase. If something works well, is reasonably priced and makes daily life easier, that's usually enough. A good home should work around the way you live."
  },
  "美学家": {
-  "anchor": "For you, beauty is a basic need of everyday life.",
-  "desc": "You are especially sensitive to how a space looks. From the shape of furniture and the relationship between materials to how everything comes together, you find it hard to overlook details that don't sit right; even when they don't affect use at all, they can keep drawing your eye. Mess, too, easily interrupts how you experience a space. You want your home to be not only comfortable and practical, but genuinely in line with your own sense of beauty."
+  "anchor": "Beauty isn't a luxury. It's part of how you feel at home.",
+  "desc": "You notice the details of how a room looks. Furniture shapes, materials and pieces that don't sit well together can keep catching your eye, even when they don't affect how the room works. Clutter can distract you too. You want home to be comfortable and practical, but it also needs to look right to you."
  },
  "大管家": {
-  "anchor": "Everything in its place — that's what keeps life in order.",
-  "desc": "You care a great deal about comfort, practicality and order at home. For you, the key is that everything has the right place — easy to find, easy to put back — so that daily life runs smoothly. Rather than deliberating over appearances, a home that works well and is tidy and well organised is what lets you feel truly settled."
+  "anchor": "When home is in order, life feels more settled.",
+  "desc": "You care about comfort, practicality and keeping things in order. Mess can affect how you feel at home, even when it doesn't stop you doing what you need to do. A tidy, useful, well-organised space helps you feel more settled. Getting that right matters more to you than perfecting every visual detail."
  },
  "有品味的大管家": {
-  "anchor": "Everything in order — and always with taste.",
-  "desc": "You value comfort, practicality and order at home, and you don't overlook visual appeal either. You might spend extra time finding something that looks right, or you might be quite sensitive to things that don't quite go together; but you usually weigh beauty alongside convenience, quality and practical needs. A home that's comfortable to live in, well ordered and pleasing to the eye is what lets you truly enjoy everyday life."
+  "anchor": "Well organised, with an eye for beauty.",
+  "desc": "You care about comfort, practicality and order, but appearance matters too. You might wait for a piece you really like or notice when something doesn't look quite right in a room. At the same time, you need the space to work well in daily life. You feel most at home when it's easy to use, easy to keep tidy and pleasing to look at."
  },
  "编辑者": {
-  "anchor": "Less, but always the right things. That's both a choice and a skill.",
-  "desc": "You prefer a space with fewer things, chosen with intention. What stays doesn't need to be much, but it needs a reason to be there: perhaps because it works well, perhaps because it looks right to you, or perhaps because it holds special meaning for you. You care about what to keep and what to let go, and about the relationship between objects and empty space. For you, the more clearly your home expresses what you need, the less it has to rely on quantity to feel full."
+  "anchor": "Less, but better, is both a choice and a skill.",
+  "desc": "You prefer fewer things, with each one chosen for a reason. It might be useful, lovely to look at or meaningful to you. You care about what you keep and the space you leave around it. Your home feels right when it reflects what matters to you, without unnecessary extras."
  },
  "简约派": {
-  "anchor": "Less. That's just right.",
-  "desc": "You don't need many things. A space that stays clear and is simple and easy to use day to day makes you feel more at ease. You'd rather focus on the things and activities you truly need than keep adding more. Home is a place where you can put down what weighs on you and live lightly."
+  "anchor": "Less simply feels right.",
+  "desc": "You don't need lots of things around you. A clear space and simple, practical routines make home easier to enjoy. You'd rather focus on what you genuinely need and do than keep adding more to your surroundings. Home should make daily life feel lighter."
  }
 };
-const MINIMALIST_Q2A = "You're also more bothered by mess; when everything has its place and the view is clear again, you feel even more at ease.";
+const MINIMALIST_Q2A = "You also find mess hard to ignore. Having things in their place, with a clear view around you, helps you feel at ease.";
 
-// Your Relationship with Home: Q5×Q6×Q7, shared by all types
-const RELATION = {
- "AAA": "An important part of what home means to you is having a place where you can relax at your own pace and gradually recover. Familiar things play a special role here: a photo, or a small keepsake brought back from a trip, can often give a space more of a sense of you. You also like to let your home change gradually with your life, and the choices you make at different times keep it close to who you are now.",
- "AAB": "Home, for you, is very much a place to set aside the world's demands for a while and return to your own rhythm. Things that carry memories are an important connection between you and your space; seeing them gives you a reassuring sense of having come home. You tend to build a long-term relationship with your home, letting a familiar arrangement and belongings that have been with you for years build up a sense of closeness over time.",
- "ABA": "Much of what home means to you comes from time alone: undisturbed, relaxing and recovering at your own pace. What puts you at ease is often the feel of the space itself: the way the light falls, the texture of materials, whether the temperature is just right. You also enjoy keeping that feeling fresh, adjusting a few details with the seasons or the rhythm of life, so your home keeps fitting who you are now.",
- "ABB": "Home is where you slow down and restore your energy. Your sense of a space comes more from its overall atmosphere: when the light, textures and temperature are right, you naturally relax. Once you've found what suits you, you'd rather let that comfort carry on for a long time; a familiar setting puts you at ease too.",
- "BAA": "What home means to you is inseparable from those closest to you; the everyday moments spent together give the space its warmth. The things that carry memories — some recording times shared with others, some belonging to your own story — all give this home its own particular meaning. You also like your home to move forward with your life, changing its look as new experiences and new stages of life come along.",
- "BAB": "Much of what makes home meaningful to you is that the people you love can gather and share everyday life there. Things that carry memories connect you with your space: they record the times you've lived through and hold the stories you share with the people who matter most. You treasure the familiarity that slowly takes shape at home, letting these stories carry on as life goes on.",
- "BBA": "Home, for you, is about sharing everyday life with the people you love and simply being together. What puts you at ease is the feel of the space itself: when the light, textures and temperature are right, people are more inclined to stay. You also like to keep that atmosphere flowing, adjusting it with the seasons and the changes in life, so the space keeps gaining new energy.",
- "BBB": "Home is a place where those closest to you can naturally gather and share everyday life. Your sense of home comes most from the overall atmosphere of the space. When the light, textures and temperature are just right, time spent together feels more at ease too. Once the space feels right, you'd rather let that familiarity and comfort carry on gradually."
+// English language edit: plain, natural British English, aligned to the final Chinese logic.
+// Q5 and Q6 shape the personal insight. Q3/Q4 and Q7 shape the design advice.
+const HOME_INSIGHT = {
+  '自由派': {
+    AA: "You don't mind having plenty of things around, but you also need home to be somewhere you can enjoy time on your own. Objects linked to personal memories may help it feel familiar. They don't need to be on show. What matters is knowing that the things and experiences you value have a place here.",
+    AB: "A crowded room or a little mess rarely bothers you. But that doesn't mean the feel of your home is unimportant. When you need time to yourself, comfortable light and somewhere to sit and unwind may matter far more than whether everything is tidy.",
+    BA: "You may not feel the need to clear away every trace of daily life. Some of those traces are what make home special. People close to you spend time here, and familiar objects carry memories of your own. For you, a sense of belonging grows from the life that happens in a home, not from keeping it picture-perfect.",
+    BB: "Your home can be busy and full of life without feeling any less welcoming. What matters is that the people close to you can relax together, with lighting, textures and a general atmosphere that feel comfortable. You can live with a bit of chaos, but you still want everyone to feel at ease."
+  },
+  '质感派': {
+    AA: "You care about the things you choose for your home, but you don't want it to feel like a showroom. It also needs to be somewhere you can relax on your own. Some things with personal meaning may not fit the look you've chosen, and that's all right. A home that feels truly yours has room for your memories too.",
+    AB: "You appreciate a beautiful room, but you also need home to help you unwind. These two things don't always come together. A room can look lovely without feeling restful, just as a beautiful chair can be uncomfortable. Light, textures and the overall atmosphere matter as much as how everything looks together.",
+    BA: "You enjoy a well-considered home and the time you spend there with people close to you. Objects linked to shared experiences or personal memories bring something that design alone cannot. Some may not fit perfectly with the rest of the room. The challenge is to make space for them without losing the sense of quality you enjoy.",
+    BB: "You want your home to look good and feel comfortable for the people close to you. Even a beautifully arranged room can be somewhere nobody wants to linger if the seating, lighting or materials aren't right. For you, real quality is about how a room feels to live in together, as well as how it looks."
+  },
+  '务实者': {
+    AA: "You want home to make daily life easier, but it also needs to give you time and space to yourself. Things that hold memories may help you feel settled, even when they have no obvious use. Being practical doesn't mean every possession has to serve a practical purpose.",
+    AB: "You value convenience, but home also needs to help you relax when you're alone. So practicality goes beyond a good layout or enough storage. Comfortable lighting, pleasant textures and a place where you can switch off are all part of making a home work for you.",
+    BA: "You want a home that works well, and the people close to you make everyday life in it meaningful. Some things worth keeping may have little practical use but hold important memories. A home can be efficient and still leave room for those personal connections.",
+    BB: "You want people to be able to relax and spend time together without fuss. You don't need elaborate styling, but the light, temperature and feel of a room still shape those moments. A practical home can be warm and welcoming too."
+  },
+  '美学家': {
+    AA: "You notice how the details of a room work together, but you also need somewhere peaceful to spend time alone. Things that hold personal memories may not always fit your preferred look. Their value is different, though, and just as real. The answer may be to find a place for them without losing the visual calm you need.",
+    AB: "Small visual mismatches can stay on your mind. When home is also where you go to recharge, the way a room looks becomes part of how well you can relax. Light, materials, proportions and the details around you all matter. Beauty, for you, can make everyday comfort possible.",
+    BA: "You have a clear sense of what looks right, and you value the memories made with people close to you. A perfectly styled room can still feel empty if there's no room for real life. Meaningful objects deserve a place, but they don't all need to be on display. Your home needs both visual harmony and a personal history.",
+    BB: "You notice visual details, but you also want people close to you to feel at home. A room that only looks good when nobody is using it won't give you both. Thoughtful lighting, materials and furniture can make the space beautiful and inviting enough to spend time in together."
+  },
+  '大管家': {
+    AA: "Mess can make it hard for you to relax, yet familiar objects and memories are also part of what makes a place feel like home. Meaningful things don't all have to be visible or easy to categorise. You need space for them, alongside an everyday order that's easy to keep.",
+    AB: "You relax more easily when your home feels orderly. But light, textures and atmosphere matter too, especially when you want time alone. If keeping a room tidy takes constant effort, it can make resting harder. The best kind of order should take work off your hands.",
+    BA: "You dislike mess, but you also value the everyday moments you share with people close to you. Those moments leave traces, including things you want to keep. Without somewhere for them to go, they can become a source of frustration. What you need is a home that makes room for shared life and is easy to put back in order.",
+    BB: "You want people close to you to feel comfortable gathering at home, but clutter can get in the way of your own enjoyment. Good organisation shouldn't mean everyone has to be careful all the time. You need a space that's welcoming when people are together and easy to tidy afterwards."
+  },
+  '有品味的大管家': {
+    AA: "You want a home that feels orderly, looks good and gives you somewhere to unwind alone. Things with personal meaning may not match everything around them, but they still deserve a place. You don't have to display them all or hide them away. What matters is keeping the space calm without losing what makes it yours.",
+    AB: "You want your home to be somewhere you can truly switch off. Light, textures and the overall atmosphere help you feel at ease, but clutter can quickly get in the way. Even a beautiful room may stop feeling relaxing if keeping it tidy takes too much effort. For you, real quality has to work in everyday life.",
+    BA: "You care about order and how your home looks, as well as the memories you share with people close to you. A room can be beautiful and tidy without feeling personal. You need space for the things that tell your story, in a way that still makes daily life easy to manage.",
+    BB: "You want your home to look harmonious and feel welcoming to the people close to you. If it takes constant care to keep a room looking good, relaxing together becomes harder. Good design should look considered, but it should also feel comfortable and easy to live with."
+  },
+  '编辑者': {
+    AA: "You're careful about what you keep, but memories don't always fit a rule about usefulness or appearance. A simple object might mean a great deal when you're on your own. Choosing carefully also means leaving room for those feelings, so your home still feels personal.",
+    AB: "You prefer a room where things have been chosen carefully, and you relax most when the atmosphere feels right. Space around your furniture lets you notice the light and textures, and gives you room to slow down. When a home already feels good, you may have less desire to fill it with more things.",
+    BA: "You like to have a reason for keeping things, but the people close to you and your shared memories matter too. Having fewer possessions doesn't mean losing the story of your life. A few meaningful things can give a simple room warmth, while other memories can be kept safely without being on show.",
+    BB: "You prefer a home with fewer, well-chosen things, but you also want people close to you to feel welcome. Space isn't only there to make a room look clean. It lets people sit, move about and spend time together comfortably. Light, materials and the way furniture is arranged can bring warmth without adding more objects."
+  },
+  '简约派': {
+    AA: "You feel best with fewer things around, but you can still value objects that hold memories. A memory doesn't become less important because you keep fewer reminders of it. A small number of familiar things, with others safely stored, may give you that connection without taking over your space.",
+    AB: "You need a simple, uncluttered home, especially when you want to relax on your own. That leaves more room to enjoy the light, textures and temperature of a space. Simplicity should help you feel less distracted and more at ease, not just make a room look empty.",
+    BA: "You prefer to live with fewer things, but shared experiences and people close to you are still an important part of home. You don't have to keep every object to honour those memories. A few meaningful reminders and a comfortable place to be together may be enough.",
+    BB: "You like a calm, simple home, and you want people close to you to feel welcome there. Simple doesn't have to mean bare or cold. Comfortable seating, gentle lighting and room to move can make your home feel warm without filling it with things."
+  }
 };
 
-// Design Direction: type + Q7
-const DIRECTION = {
- "自由派": {
-  "A": "Keep the things you use often where they're easy to reach; storage doesn't need to be complicated, and leave some room for life to shift. You don't need to manage everything strictly — as long as the important things are easy to do, your home can stay relaxed.",
-  "B": "Take the time to get the furniture and everyday items you use most right, favouring options that are durable and easy to maintain. Things that suit you last longer, and they also cut down on repeat buying and tidying."
- },
- "质感派": {
-  "A": "Let key furniture and the overall colour palette form a stable foundation, and leave room to adjust smaller items and details. If each change considers both ease of use and visual harmony, your home can stay fresh without losing its sense of cohesion.",
-  "B": "Focus your energy on the key pieces you'll use for a long time and that shape how the whole space looks. Choose with both function and lasting appeal in mind; get the foundations right, and you won't need to keep adjusting later."
- },
- "务实者": {
-  "A": "First make your daily routes and routines flow smoothly, then leave some flexibility for adjusting parts of the space. There's no need for a major overhaul — small changes can keep life convenient and feeling fresh.",
-  "B": "Prioritise furniture that is the right size, comfortable, durable and easy to maintain. Thinking through your key needs properly once suits you better than replacing things for the sake of style."
- },
- "美学家": {
-  "A": "First build a harmonious visual foundation for the whole space, then let materials, objects and details change with your taste. Change can happen without breaking up the overall beauty.",
-  "B": "Put your time and budget into the elements that truly shape how the whole space looks, such as the proportions of key furniture, the relationships between materials, and the harmony between light and backdrop. Once you've found an effect you're happy with, it's worth keeping for the long term."
- },
- "大管家": {
-  "A": "Set up storage and ways of putting things away that can adapt as life changes. The point is to make things easy to find and easy to return, not to add more steps to tidying. That way, when life changes, order can keep up.",
-  "B": "Give everyday items clear, stable places so that taking them out and putting them back is effortless. An easy-to-manage system doesn't have to be complicated; what matters is that it fits naturally into daily life."
- },
- "有品味的大管家": {
-  "A": "Keep storage and the way you move through the space flexible, adjusting them as life changes, while paying attention to how key pieces of furniture go together. Practicality, tidiness and visual harmony can all be balanced within the same arrangement.",
-  "B": "Think through your daily routes and how things are put away once and thoroughly, then carefully choose the key pieces you'll use for years. Balancing quality, durability and how the space looks gives you a home that stands the test of time and is easy to live in."
- },
- "编辑者": {
-  "A": "Keep a clear sense of hierarchy and some empty space, leaving room for a few key pieces to speak. When you want a change, there's no need to add much; moving or replacing one focal point can refresh the whole space.",
-  "B": "Let furniture, materials and empty space form a stable whole. Choose what truly suits you with care and give it a lasting place; without frequent change, the space can keep its own character."
- },
- "简约派": {
-  "A": "Choose larger pieces for durability, sufficiency and simplicity, and leave some room to adjust the details. When you want a change, start small, so the space doesn't slowly fill up with new things.",
-  "B": "Choose pieces that meet your needs, are easy to maintain and stand up to everyday use. Keep clear routes through the space and the right amount of empty space, so that a simple, easy state lasts."
- }
-};
-const DRIFTER_AESTHETIC = "If you also have clear expectations about how things look, start with the places you see and use most, paying attention to how pieces of furniture sit together visually — there's no need to give up the look you love for the sake of being relaxed.";
-
-// Making It Yours: type principle + shared Q5×Q6 paragraph
-const PRINCIPLE = {
- "自由派": "Making your home more like you doesn't mean suddenly living by rules; just start gradually with whatever affects your day-to-day feelings most.",
- "质感派": "However you create your own sense of belonging, you can consider how things work and how the whole space looks together.",
- "务实者": "Start with the spaces you genuinely use every day, keep changes easy and simple, and avoid unnecessary upkeep where you can.",
- "美学家": "While responding to your personal needs, also look after the overall visual relationships, so that every arrangement sits naturally within the overall look you're after.",
- "大管家": "However you want to use your space, give belongings and activities a proper place, keeping everyday life convenient and orderly.",
- "有品味的大管家": "Bring your personal needs into the overall arrangement, balancing order, convenience and visual harmony.",
- "编辑者": "Keep space for the needs that truly matter, so that everything that stays is worth it; empty space can be meaningful too.",
- "简约派": "However you respond to your own needs, you never have to give up the simplicity and openness you value."
-};
-const YOURS = {
- "AA": "Keep an area of your home relatively undisturbed for yourself. It doesn't need to be large, but it should let you get back to your own rhythm with ease. As for things with personal meaning, some can sit where you see them every day, while others are better kept safely away. The key is to give them a proper place in your life; they don't all need to be on display.",
- "AB": "Make a comfortable place for solitude and relaxation, and when designing it, pay attention to the overall sensory experience: whether the lighting can be adjusted as you need, whether materials feel good to the touch, whether sound and temperature put you at ease. Together, these experiences may shape how relaxed you feel at home more than any single piece of furniture.",
- "BA": "Start by considering how those closest to you can naturally linger and talk with ease. As for meaningful things, you might distinguish between those that record shared experiences and those that belong to more personal stories, then find a suitable place for each. What matters is letting these memories blend naturally into everyday life, without insisting that everything be on display.",
- "BB": "Make sure the areas where you and the people you love spend time together are comfortable enough, so that conversation and company come about more naturally. At the same time, pay attention to how the space feels as a whole: layers of light, the texture of materials, sound, temperature and how comfortable it is to sit down all work together to create an atmosphere that makes people want to stay."
+// Q3 concerns willingness to wait for a design one likes, NOT willingness to spend more.
+// Q4 concerns noticing visual mismatches, NOT whether someone is neat or messy.
+const AESTHETIC_DIRECTION = {
+  '自由派': {
+    AA: "You have a relaxed approach to how you live. Start with what makes day-to-day life easier: enough room to move, frequently used things within reach and furniture that can handle regular use. You don't need to make the whole home follow a strict set of rules.",
+    AB: "There's a contrast worth noticing: you can put practicality first when you buy something, yet a piece that looks out of place may bother you once it's home. Instead of trying to make everything match, pay attention to how the furniture you see most often works together. Your home can stay relaxed and still feel visually right.",
+    BA: "You're happy living with plenty of things, and some mess doesn't bother you. Yet you're willing to wait for a particular piece that looks right to you. You may care more about the furniture you choose than about making every corner look coordinated. Choose the important pieces with care and leave room for spontaneity elsewhere.",
+    BB: "You're comfortable in a home full of everyday life, but you still want individual pieces to look right and fit well together. A few carefully chosen furniture combinations can give the room a sense of harmony, even as life adds its own layers around them."
+  },
+  '质感派': {
+    AB: "A piece of furniture may work perfectly well and still feel wrong in the room. You might choose something practical, then find yourself noticing every time it looks out of place. Before buying an important piece, look at its size, colour and materials alongside what you already have.",
+    BA: "You're willing to wait for a piece you really like, but a small mismatch between pieces doesn't bother you much. That gives you freedom to choose the furniture that matters most without making everything match. Let the smaller details come together more naturally.",
+    BB: "You care about how individual pieces look and how they sit together. Beautiful furniture doesn't always make a beautiful room. Before choosing key pieces, think about their proportions, colours and materials as a group, rather than one at a time."
+  },
+  '务实者': {
+    AA: "You know what works for you. Start with the everyday things that cause small frustrations: awkward routes through a room, inconvenient storage or furniture that's hard to care for. Solve those first. A good-looking home should make life easier, not add to the work."
+  },
+  '美学家': {
+    BB: "It's not enough for each piece to look good on its own. The way furniture, materials and light work together may matter even more to you. Plan how the room should feel as a whole before choosing individual pieces, so the things you love don't end up competing for attention."
+  },
+  '大管家': {
+    AA: "You feel better when your home is in order. Notice where clutter tends to build up, then make everyday things easier to take out and put away. A good layout can make tidying less of a chore, so keeping order doesn't depend on constant effort."
+  },
+  '有品味的大管家': {
+    AB: "You can choose something for its practical value, then find that it looks slightly out of place at home. With important furniture, think about size, how easy it is to care for and how it works with the rest of the room. It may save you from having to change things around later.",
+    BA: "You're willing to wait for a piece you really like, but a small mismatch between pieces doesn't bother you much. That leaves you free to focus on a few important pieces, rather than trying to make everything match. Choose the furniture that sets the tone of the room with care, and keep everyday items practical and easy to maintain."
+  },
+  '编辑者': {
+    AB: "When there are fewer things in a room, each piece stands out more. You may buy for practical reasons, but still notice when something looks out of place. Pay attention to scale and placement when choosing what stays, rather than adding more decoration later to make it work.",
+    BA: "You're happy to wait for something you truly like, but you can live with small differences in how pieces look together. There's no need for everything to match. Give each well-chosen object enough space to have its own character.",
+    BB: "You have high standards for both the pieces you choose and how they work together. With fewer objects in the room, each decision has more impact. Before adding something, ask whether you really want it there, whether it suits the space and what room it leaves for everything else."
+  },
+  '简约派': {
+    AA: "You want to keep life simple, so your design choices shouldn't create extra work. Start with the size of the space, the furniture you really need and how you move around the room. Leaving some areas empty can make everyday life easier."
+  }
 };
 
-const EN_NAMES = {
-  '自由派':'The Drifter', '质感派':'The Selector', '务实者':'The Pragmatist', '美学家':'The Aesthete',
-  '大管家':'The Organiser', '有品味的大管家':'The Organiser with Taste', '编辑者':'The Editor', '简约派':'The Minimalist'
+// Q5 x Q6 connects the insight to a practical design direction.
+// Memory objects can be kept, used or stored: Q6 does not imply display habits.
+const NEEDS_DIRECTION = {
+  '自由派': {
+    AA: "Make space for a quiet spot where you can spend time alone. Keep things with personal memories in whatever way suits you: some close by, others stored safely. The point is to feel at home, not to arrange everything perfectly.",
+    AB: "Give yourself somewhere genuinely comfortable to unwind. Think about lighting you can adjust, a seat you enjoy and having what you need close by. The rest of the home can stay flexible without getting in the way of your rest.",
+    BA: "Make it easy for people close to you to come together and share daily life. Give meaningful objects a place too, whether you use them, keep them nearby or store them safely. They don't all need to be displayed.",
+    BB: "Start with somewhere comfortable for people to sit and spend time together, then think about lighting and how the materials feel. There's no need to hide all the signs of daily life. The room should feel good when people are actually using it."
+  },
+  '质感派': {
+    AA: "Make sure the place where you spend time alone feels restful, not simply lovely in a photograph. Find a place for things that hold memories without feeling you have to sacrifice either personal meaning or the look of your home.",
+    AB: "Pay particular attention to the spaces you use to unwind. Lighting you can adjust, a seat you love using and pleasant materials can make the room feel as good at the end of a long day as it looks.",
+    BA: "In the spaces you share with people close to you, balance comfortable seating and everyday use with a look you enjoy. Give meaningful things a place without expecting them all to match or be put on display.",
+    BB: "Start with the places where you spend time together. Comfortable seating, a natural distance for conversation and well-placed lighting will all help. A room can look coordinated, but it also needs to make people want to stay."
+  },
+  '务实者': {
+    AA: "Make the space you use on your own easy and comfortable. Keep objects with memories somewhere that suits you, even if they're rarely used or don't serve as decoration. They can still be worth having.",
+    AB: "Think of comfortable lighting, pleasant materials and a place free from interruptions as everyday needs, not extras. A practical room should make it easier for you to rest as well as get things done.",
+    BA: "Make it easy for the people close to you to sit, talk and share daily activities. Find suitable places for things that hold memories too, without letting them get in the way of how you use the room.",
+    BB: "Focus on what makes shared time comfortable: enough room to move, seating that works for conversation and good lighting. These may do more for your home than adding decorative details."
+  },
+  '美学家': {
+    AA: "Keep the room where you spend time alone visually calm, and make space for personal keepsakes in a way that feels right to you. You don't have to display every memory to value it, and a harmonious room can still feel personal.",
+    AB: "Think about your resting space from where you'll actually sit. What will you see? How bright is the light? How do the fabrics and surfaces feel? A beautiful room should still be comfortable after you've spent a whole evening there.",
+    BA: "Let the people close to you spend time together comfortably, with room for daily life and the things that matter to you. Meaningful objects can be part of the design or kept safely elsewhere. You don't have to choose between beauty and memories.",
+    BB: "Alongside how the room looks, think about where people will sit, how they'll move around and what the lighting feels like. A beautiful space should stay comfortable when people are talking, relaxing and going about their day."
+  },
+  '大管家': {
+    AA: "Set aside a comfortable place for time alone, with everyday things easy to reach and put away. Give personal keepsakes somewhere suitable to live, whether or not they're on show. You shouldn't have to tidy the whole room before you can rest.",
+    AB: "Make your resting area comfortable and easy to look after. Choose lighting you can adjust, materials that are easy to care for and storage that's convenient to use. Good organisation should help you relax, not give you another job.",
+    BA: "Arrange furniture and storage around how you and the people close to you use the space. Daily activities should be easy, and tidying afterwards shouldn't be difficult. Make room for meaningful objects without needing to display or hide them all together.",
+    BB: "Give shared spaces comfortable seating and lighting, clear paths and somewhere convenient to put things away. You can then enjoy lively time together without having a major tidy-up after every visit."
+  },
+  '有品味的大管家': {
+    AA: "Create a comfortable, easy-care place for quiet time. Plan somewhere suitable for objects that hold personal memories, even if you don't want them on show. This lets the space feel calm and considered without losing its personal meaning.",
+    AB: "In the place where you unwind, think about lighting, comfortable seating, materials and storage together. Make it easy to put things away, so the room stays calm without constant tidying.",
+    BA: "Make it easy for people close to you to spend time together. Plan places for objects linked to shared memories too. Some may fit naturally into daily life; others can be stored safely. The aim is to make room for what matters without adding more work.",
+    BB: "Plan seating, lighting, clear routes and easy-to-use storage together. When people can relax in the room and it still feels harmonious without constant effort, you can enjoy both its beauty and its practicality."
+  },
+  '编辑者': {
+    AA: "Leave a little breathing room for quiet time, and give meaningful objects places that suit you. Not every keepsake has to be visible, but you don't need to put something aside simply because it doesn't match the rest of the room.",
+    AB: "Use light, texture and open space to make time alone feel restful. You don't need lots of things to create atmosphere. A few pieces that work well together may give you everything you need.",
+    BA: "Arrange the room around how people close to you spend time together, and leave some space for meaningful things. You may keep only a few reminders in the room, with other memories safely stored. Both can be part of your home.",
+    BB: "In shared spaces, give people enough room to sit and move comfortably. Focus on the light, the materials and how the room feels to use, rather than adding objects just to make it look warm."
+  },
+  '简约派': {
+    AA: "Keep a calm, clear spot for time alone. You can have a few familiar keepsakes around you and store other meaningful things safely, without having every memory in view.",
+    AB: "Keep the space easy to move through and easy on the eye. Then pay attention to light, temperature and textures. For you, a simple room should make it easier to relax and recharge.",
+    BA: "Make it easy to spend time with people close to you, and leave a little space for objects with personal meaning. Keeping the room simple doesn't mean leaving shared memories out of it.",
+    BB: "Use comfortable seating, clear paths and gentle lighting you can adjust. These can make a room welcoming without filling it with extra furniture or decoration."
+  }
 };
 
-// 显示用人格名（大管家按判定表区分有品味子版本）
+// Q7: a preference for change or lasting familiarity, without assuming life stage or budget.
+const CHANGE_DIRECTION = {
+  '自由派': {
+    A: "If you enjoy changing things around, keep smaller pieces easy to move. A fresh look should be simple to achieve, not another chore.",
+    B: "If you prefer to keep things as they are once they feel right, choose sturdy, easy-care furniture you'll enjoy using for years."
+  },
+  '质感派': {
+    A: "Keep the main furniture and colours fairly consistent, and change smaller details when you feel like it. That way the room can feel fresh without losing its balance.",
+    B: "Take your time choosing the pieces you'll live with for years. When they work well and still look right to you, there's little reason to replace them."
+  },
+  '务实者': {
+    A: "If you enjoy a change now and then, choose smaller pieces that are easy to move or use in different ways. Keep the everyday layout practical.",
+    B: "Choose comfortable, durable furniture and arrangements that will keep working for you over time. There's no need to change something that's doing its job well."
+  },
+  '美学家': {
+    A: "If you like to refresh your surroundings, keep the main colours and larger pieces consistent, then change a few details at a time. The room can evolve without losing its balance.",
+    B: "Give the main furniture, proportions and lighting careful thought from the start. Once the whole room feels right, you can enjoy it for years."
+  },
+  '大管家': {
+    A: "If you enjoy changing things around, choose storage and furniture that's easy to adapt. You can rearrange the room without making order harder to maintain.",
+    B: "If you prefer things to stay familiar, keep storage simple and consistent, so returning everyday items to their places feels natural."
+  },
+  '有品味的大管家': {
+    A: "If you enjoy the occasional change, refresh smaller details while keeping the main furniture and storage practical. A new look doesn't need to upset the order you value.",
+    B: "Choose key pieces you'll still enjoy living with years from now. A thoughtful layout can help that comfortable feeling last without frequent changes."
+  },
+  '编辑者': {
+    A: "When you want a change, try moving or replacing one or two pieces rather than adding more. A small adjustment can make the whole space feel different.",
+    B: "If you prefer familiarity, let the pieces you've chosen settle into the space over time. A room can gain character without constantly changing."
+  },
+  '简约派': {
+    A: "If you like a change, start with one or two details. A different feeling doesn't have to mean bringing more things into the room.",
+    B: "Keep the furniture you need simple, durable and easy to use. When it works well, you can enjoy that sense of ease for years."
+  }
+};
+
+const PERSONALISED_CTA = {
+  '自由派': "Make room for the way you really live.",
+  '质感派': "Bring beauty and everyday comfort together.",
+  '务实者': "Make everyday life at home easier.",
+  '美学家': "Create a home that feels as right as it looks.",
+  '大管家': "Make it easier to feel at home, and keep things in order.",
+  '有品味的大管家': "Bring comfort, order and a considered look together.",
+  '编辑者': "Make the pieces you choose work harder for you.",
+  '简约派': "Keep the simplicity that makes you feel at home."
+};
+
+// Keep Chinese internal keys for the classification and existing logging schema.
 function displayType(type, ans) {
-  return (type === '大管家' && isPinweiGuanjia(ans)) ? '有品味的大管家' : type;
+  return (type === '大管家' && (ans.q3 === 'B' || ans.q4 === 'B')) ? '有品味的大管家' : type;
 }
-
 function getContent(type, ans) {
   const key = displayType(type, ans);
   const about = ABOUT[key];
+  const relationKey = ans.q5 + ans.q6;
+  const aestheticKey = ans.q3 + ans.q4;
   let desc = about.desc;
   if (key === '简约派' && ans.q2 === 'A') desc += ' ' + MINIMALIST_Q2A;
-  let direction = DIRECTION[key][ans.q7];
-  if (key === '自由派' && (ans.q3 === 'B' || ans.q4 === 'B')) direction += '\n\n' + DRIFTER_AESTHETIC;
+  const directionOpening = AESTHETIC_DIRECTION[key][aestheticKey];
+  const directionNeeds = NEEDS_DIRECTION[key][relationKey];
+  const directionChange = CHANGE_DIRECTION[key][ans.q7];
+  if (!directionOpening || !directionNeeds || !directionChange || !HOME_INSIGHT[key][relationKey]) {
+    throw new Error(`Missing copy module: ${key}/${aestheticKey}/${relationKey}/${ans.q7}`);
+  }
   return {
     name: key,
     anchor: about.anchor,
     desc,
-    relation: RELATION[ans.q5 + ans.q6 + ans.q7],
-    direction,
-    yours: PRINCIPLE[key] + '\n\n' + YOURS[ans.q5 + ans.q6],
+    relation: HOME_INSIGHT[key][relationKey],
+    direction: directionOpening + '\n\n' + directionNeeds + ' ' + directionChange,
+    cta: PERSONALISED_CTA[key]
   };
 }
 
@@ -535,38 +677,61 @@ function logResult(ans, resultName) {
   } catch (e) { /* 记录失败不影响显示结果 */ }
 }
 
-// ── 计算 ─────────────────────────────────────────────
+// ── 计算与展示 ────────────────────────────────────────
+// 正式答题仍匿名写入表格；本地快捷预览不会写入。
 function calculate() {
   const ans = {};
   ['q1','q2','q3','q4','q5','q6','q7'].forEach(q => {
     ans[q] = document.querySelector(`input[name="${q}"]:checked`).value;
   });
+  renderResult(ans, true);
+}
 
+function renderResult(ans, shouldLog) {
   const { topType } = computeResult(ans);
   const content = getContent(topType, ans);
 
   document.getElementById('res-watermark').textContent = WATERMARKS[topType] || '';
-  document.getElementById('res-name').textContent = EN_NAMES[content.name];
-
   const enNames = {
     '有品味的大管家':'The Organiser with Taste',
     '自由派':'The Drifter', '质感派':'The Selector', '务实者':'The Pragmatist',
     '美学家':'The Aesthete', '大管家':'The Organiser', '编辑者':'The Editor', '简约派':'The Minimalist'
   };
+  document.getElementById('res-name').textContent = enNames[content.name] || '';
   document.getElementById('res-en').textContent = '';
   document.getElementById('res-anchor').textContent = content.anchor;
   const html = t => t.replace(/\n\n/g, '<br><br>');
   document.getElementById('res-desc').innerHTML = html(content.desc);
   document.getElementById('res-relation').innerHTML = html(content.relation);
   document.getElementById('res-direction').innerHTML = html(content.direction);
-  document.getElementById('res-yours').innerHTML = html(content.yours);
+  document.getElementById('res-cta-text').textContent = content.cta;
 
   document.getElementById('res-code').textContent = ['q1','q2','q3','q4','q5','q6','q7'].map(q => ans[q]).join(' ');
-  logResult(ans, content.name);
+  if (shouldLog) logResult(ans, content.name);
 
   document.getElementById('form-section').style.display = 'none';
   document.getElementById('result-section').classList.add('show');
   window.scrollTo(0,0);
+}
+
+function previewCode(code) {
+  document.getElementById('preview-code').value = code;
+  previewResult();
+}
+function previewResult() {
+  const code = document.getElementById('preview-code').value.trim().toUpperCase();
+  const error = document.getElementById('preview-error');
+  if (!/^[ABC][AB]{6}$/.test(code)) {
+    error.textContent = 'Enter seven letters: A, B or C for the first answer, then A or B for the remaining six.';
+    return;
+  }
+  error.textContent = '';
+  const ans = Object.fromEntries([...code].map((value, i) => ['q' + (i+1), value]));
+  renderResult(ans, false);
+}
+// 本地直接显示；在 GitHub Pages 上添加 ?preview=1 可显示，正常访问不暴露测试控件。
+if (window.location.protocol === 'file:' || new URLSearchParams(window.location.search).get('preview') === '1') {
+  document.getElementById('local-preview').style.display = 'block';
 }
 
 // ── 判定（按分类规则表，纯函数，便于穷举验证）──────────
