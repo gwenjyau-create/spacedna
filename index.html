@@ -521,7 +521,7 @@ function checkReady() {
 
 // ── 匿名记录（只记答案、结果、语言和时间，不收集任何个人信息）──
 // 部署 Google 表格脚本后，把接收地址填在这里；留空则不记录
-const LOG_URL = '';
+const LOG_URL = 'https://script.google.com/macros/s/AKfycby9nYTN-ECfn47ZmwW8IfKlA8KOc6x26I6wvdEVNWqY4YSrvVEoluhMOG8vDB7YosWDPw/exec';
 function logResult(ans, resultName) {
   if (!LOG_URL) return;
   try {
