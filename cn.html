@@ -128,6 +128,36 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
 .result-accent { width: 28px; height: 2px; background: #C4A45A; margin-bottom: 1.25rem; }
 .result-anchor { font-size: 16px; font-style: italic; color: #7A5C2E; line-height: 1.7; font-weight: 300; }
 
+.result-cta {
+  background: white;
+  border: 0.5px solid #C4A45A;
+  border-radius: 2px;
+  padding: 1.5rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+.result-cta-text {
+  font-size: 13px;
+  font-style: italic;
+  color: #7A5C2E;
+  margin-bottom: 0.9rem;
+  font-family: Georgia, serif;
+}
+.result-cta-btn {
+  display: inline-block;
+  padding: 10px 28px;
+  border: 0.5px solid #2C2420;
+  border-radius: 2px;
+  font-size: 12px;
+  color: #2C2420;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: all 0.15s;
+}
+.result-cta-btn:hover { background: #2C2420; color: #F5EFE6; }
+.answer-tip { font-size: 12px; color: #7A5C2E; text-align: center; line-height: 1.7; margin: 0 0 1rem; font-style: italic; }
+.answer-code { font-size: 10px; color: #9A8F82; text-align: center; letter-spacing: 0.08em; margin: 0.25rem 0 0.75rem; }
+
 .result-section {
   background: white;
   border: 0.5px solid #D9D0C4;
@@ -200,18 +230,19 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
   </div>
 
   <div id="form-section">
+    <p class="answer-tip">凭第一反应，选更接近平时的你，而不是你觉得“应该”选的那个。</p>
     <div class="card">
-      <div class="q-num">Q1 · 数量感受</div>
-      <div class="q-title">家里的东西，你希望是什么状态？</div>
+      <div class="q-num">1 / 7</div>
+      <div class="q-title">家里东西的数量，会怎样影响你的感受？</div>
       <div class="options" id="q1">
-        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>多一些没关系，多了就多了</label>
-        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>不多不少，有进有出</label>
-        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>少一些比较好，少了才舒服</label>
+        <label><input type="radio" name="q1" value="A"><span class="option-key">A</span>影响不大，东西很多也没关系，多了就多了</label>
+        <label><input type="radio" name="q1" value="B"><span class="option-key">B</span>不用很少，但也不能很多，我会有意识地控制</label>
+        <label><input type="radio" name="q1" value="C"><span class="option-key">C</span>少一点才行，稍微多了就会不舒服，所以我会主动减少</label>
       </div>
     </div>
 
     <div class="card">
-      <div class="q-num">Q2 · 容忍度</div>
+      <div class="q-num">2 / 7</div>
       <div class="q-title">家里乱了，你会？</div>
       <div class="options" id="q2">
         <label><input type="radio" name="q2" value="A"><span class="option-key">A</span>难以忍受，会很影响我的心情</label>
@@ -220,43 +251,43 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
     </div>
 
     <div class="card">
-      <div class="q-num">Q3 · 美感vs实用</div>
-      <div class="q-title">家里添置东西，你更倾向于？</div>
+      <div class="q-num">3 / 7</div>
+      <div class="q-title">家里需要添一样平时要用的东西。你找到一个好用、价格合适的，只是样子普通。你会？</div>
       <div class="options" id="q3">
-        <label><input type="radio" name="q3" value="A"><span class="option-key">A</span>实用舒适优先，好看是加分</label>
-        <label><input type="radio" name="q3" value="B"><span class="option-key">B</span>好看品位优先，舒适是加分</label>
+        <label><input type="radio" name="q3" value="A"><span class="option-key">A</span>买下来。好用、价格合适，就已经满足需要了，样子普通没关系</label>
+        <label><input type="radio" name="q3" value="B"><span class="option-key">B</span>先不买。宁可这段时间用着不方便、多花时间去找，也要找到外观合心意的</label>
       </div>
     </div>
 
     <div class="card">
-      <div class="q-num">Q4 · 美感vs实用（深化）</div>
-      <div class="q-title">家里需要添置一件家具，你找到了一件好用实惠的，你会？</div>
+      <div class="q-num">4 / 7</div>
+      <div class="q-title">家里有一件家具一直很好用，样子也不难看，但和周围的搭配总有一点不协调。你更接近哪种感受？</div>
       <div class="options" id="q4">
-        <label><input type="radio" name="q4" value="A"><span class="option-key">A</span>买了，因为好用实惠就够了</label>
-        <label><input type="radio" name="q4" value="B"><span class="option-key">B</span>还必须好看，我要继续找</label>
+        <label><input type="radio" name="q4" value="A"><span class="option-key">A</span>我会注意到，但只要整体住着舒服、用着顺手，通常不会一直在意</label>
+        <label><input type="radio" name="q4" value="B"><span class="option-key">B</span>即使完全不影响使用，那一点不协调还是会反复引起我的注意，很难忽略</label>
       </div>
     </div>
 
     <div class="card">
-      <div class="q-num">Q5 · 展示欲</div>
-      <div class="q-title">你家里那些你在乎的东西，你希望它们？</div>
+      <div class="q-num">5 / 7</div>
+      <div class="q-title">对你来说，什么更能让你感受到家的意义？</div>
       <div class="options" id="q5">
-        <label><input type="radio" name="q5" value="A"><span class="option-key">A</span>被看见，摆在那里让人感受到</label>
-        <label><input type="radio" name="q5" value="B"><span class="option-key">B</span>收好，我知道它们在那里就足够了</label>
+        <label><input type="radio" name="q5" value="A"><span class="option-key">A</span>有一个属于自己的空间，可以不受打扰，按照自己的节奏放松和恢复</label>
+        <label><input type="radio" name="q5" value="B"><span class="option-key">B</span>有一个让亲近的人自然聚在一起的地方，可以分享日常、享受陪伴</label>
       </div>
     </div>
 
     <div class="card">
-      <div class="q-num">Q6 · 收集倾向</div>
-      <div class="q-title">你会不会主动让一些物品进入家里，不是因为需要用它？</div>
+      <div class="q-num">6 / 7</div>
+      <div class="q-title">什么最能让你和一个空间产生连接？</div>
       <div class="options" id="q6">
-        <label><input type="radio" name="q6" value="A"><span class="option-key">A</span>会，而且不少</label>
-        <label><input type="radio" name="q6" value="B"><span class="option-key">B</span>偶尔会，但总体来说不会很多</label>
+        <label><input type="radio" name="q6" value="A"><span class="option-key">A</span>身边有承载个人回忆的东西，比如照片、旅行带回来的小物件。这些熟悉的痕迹让我更有家的感觉</label>
+        <label><input type="radio" name="q6" value="B"><span class="option-key">B</span>空间本身的氛围，比如光线、触感、温度和整体的感觉，最能让我有家的感觉</label>
       </div>
     </div>
 
     <div class="card">
-      <div class="q-num">Q7 · 时间关系</div>
+      <div class="q-num">7 / 7</div>
       <div class="q-title">你和家的关系，更像？</div>
       <div class="options" id="q7">
         <label><input type="radio" name="q7" value="A"><span class="option-key">A</span>喜欢折腾，时不时调整让家保持新鲜感</label>
@@ -285,25 +316,31 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
     </div>
 
     <div class="result-section">
-      <div class="result-section-label">描述</div>
+      <div class="result-section-label">你是谁</div>
       <div class="result-section-text" id="res-desc"></div>
     </div>
 
-    <div class="result-grid">
-      <div class="result-grid-cell">
-        <div class="result-section-label">建议</div>
-        <div class="result-section-text" id="res-rec1"></div>
-      </div>
-      <div class="result-grid-cell">
-        <div class="result-section-label">选品方向</div>
-        <div class="result-section-text" id="res-rec2"></div>
-      </div>
+    <div class="result-section">
+      <div class="result-section-label">你和家的关系</div>
+      <div class="result-section-text" id="res-relation"></div>
     </div>
 
-    <div class="scores">
-      <div class="scores-title">各类型得分（供参考）</div>
-      <div id="score-list"></div>
+    <div class="result-section">
+      <div class="result-section-label">设计方向</div>
+      <div class="result-section-text" id="res-direction"></div>
     </div>
+
+    <div class="result-section">
+      <div class="result-section-label">让家更像你</div>
+      <div class="result-section-text" id="res-yours"></div>
+    </div>
+
+    <div class="result-cta">
+      <div class="result-cta-text">想让你的家更像你？</div>
+      <a href="https://www.syphomes.com/find-your-starting-point" class="result-cta-btn" target="_blank">找到你的起点</a>
+    </div>
+
+    <div class="answer-code">你的答案：<span id="res-code"></span></div>
 
     <div class="result-footer">
       <div class="result-footer-line"></div>
@@ -314,20 +351,16 @@ button:disabled { background: #C8BFB5; cursor: not-allowed; }
     <button class="btn-reset" onclick="reset()">重新测试</button>
   </div>
 
-  <div class="footer">Space DNA · SYP Homes · 内部工具 · 请勿外传</div>
+  <div class="footer">Space DNA · SYP Homes · syphomes.com</div>
 </div>
 
 <script>
 // ── 打分矩阵 ─────────────────────────────────────────
-const MATRIX = {
-  '自由派':  { q1:{A:3,B:-2,C:-3}, q2:{A:-3,B:3}, q3:{A:1,B:1},  q4:{A:1,B:1},  q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
-  '质感派':  { q1:{A:-1,B:3,C:-2}, q2:{A:-2,B:3}, q3:{A:0,B:2},  q4:{A:-1,B:3}, q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
-  '务实者':  { q1:{A:-1,B:3,C:-2}, q2:{A:-2,B:3}, q3:{A:2,B:-2}, q4:{A:3,B:-2}, q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
-  '美学家':  { q1:{A:2,B:1,C:-2},  q2:{A:3,B:-3}, q3:{A:-3,B:3}, q4:{A:-2,B:2}, q5:{A:2,B:-1}, q6:{A:1,B:1}, q7:{A:1,B:1} },
-  '大管家':  { q1:{A:2,B:1,C:-2},  q2:{A:3,B:-3}, q3:{A:2,B:-2}, q4:{A:2,B:-1}, q5:{A:0,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
-  '编辑者':  { q1:{A:-2,B:-1,C:3}, q2:{A:1,B:1},  q3:{A:-1,B:3}, q4:{A:-1,B:2}, q5:{A:1,B:1},  q6:{A:1,B:1}, q7:{A:1,B:1} },
-  '简约派':  { q1:{A:-2,B:-1,C:3}, q2:{A:1,B:1},  q3:{A:2,B:-1}, q4:{A:2,B:-1}, q5:{A:-1,B:2}, q6:{A:1,B:1}, q7:{A:1,B:1} },
-};
+
+// 有品味的大管家：在意乱组里，Q3=B 或 Q4=B 只满足其一（两者都选B是美学家）
+function isPinweiGuanjia(ans) {
+  return ans.q3 === 'B' || ans.q4 === 'B';
+}
 
 // ── 水印字母 ─────────────────────────────────────────
 const WATERMARKS = {
@@ -335,169 +368,99 @@ const WATERMARKS = {
   '美学家':'A', '大管家':'O', '编辑者':'E', '简约派':'M'
 };
 
-// ── 类型内容 ─────────────────────────────────────────
+// ── 结果文案（2026-10 修订版）────────────────────────
+// 你是谁：人格（Q1–Q4）
+const ABOUT = {
+  '自由派': { anchor:'东西多一点，乱一点，那都不是事儿。',
+    desc:'家对你来说，是一个可以放松生活、不必时时费心经营的地方。物品多一些、摆放随意一些，通常不会让你太困扰。你更愿意把精力放在生活本身，而不是时刻维持整齐。家可以有生活留下的痕迹，只要不妨碍你自在地生活，就不必事事规整。' },
+  '质感派': { anchor:'好用与好看，你都放在心上。',
+    desc:'你喜欢家里的物品保持适当的数量，不必时刻整齐，但对生活品质和视觉感受都有自己的要求。挑选一件东西时，你会考虑它是否好用，也会关注它与整个空间是否协调。对你而言，家可以松弛，但不必因此忽略质感；实用与美感，都值得认真对待。' },
+  '务实者': { anchor:'好住比好看更重要。',
+    desc:'你希望家住得舒服、生活顺畅。好看当然是加分，但不必成为每次选择的必要条件。只要东西好用、价格合适，整体生活也足够顺手，你就不需要为了外观反复纠结。家最重要的，是能自然地服务每天的生活。' },
+  '美学家': { anchor:'美感对你来说，是生活的基本需要。',
+    desc:'你对空间的视觉效果格外敏感。从家具造型、材质关系到整体搭配，你很难忽略那些不协调的细节；即使完全不影响使用，它们也可能反复进入你的视线。凌乱同样容易打断你对空间的感受。你希望家不仅舒适、好用，还能真正符合自己的审美标准。' },
+  '大管家': { anchor:'东西各归其位，生活才有秩序。',
+    desc:'你很重视家的舒适、实用与秩序。对你来说，关键是每件东西都有合适的位置，找得到、放得回，让日常生活顺畅运转。相比反复推敲外观，一个好用、整洁、有条理的家，更能让你住得踏实。' },
+  '有品味的大管家': { anchor:'井井有条，不失品味。',
+    desc:'你重视家的舒适、实用与秩序，也不会忽略视觉美感。你可能会为了合心意的外观多花时间，也可能对某些搭配的不协调比较敏感；但你通常会把美感与生活中的便利、品质和使用需要放在一起考虑。一个好住、有秩序，也看着舒服的家，才更能让你安心享受日常。' },
+  '编辑者': { anchor:'少而精，是一种选择，也是一种能力。',
+    desc:'你更喜欢物品少而有选择的空间。留下来的东西不必很多，但要有存在的理由：或许因为好用，或许因为视觉上合心意，也可能因为对你有特别的意义。你在意取舍，也在意物品与留白之间的关系。对你来说，家越清楚地表达自己的需要，就越不必靠数量来填满。' },
+  '简约派': { anchor:'少，就对了。',
+    desc:'你不需要很多东西。空间保持清爽、日常使用简单顺手，会让你更自在。你更愿意把注意力放在真正需要的物品和活动上，而不是持续增加东西。家是能够放下负担、让自己轻松生活的地方。' },
+};
+const MINIMALIST_Q2A = '你也更在意凌乱，物品各得其所、视线恢复清爽，会让你更加安心。';
+
+// 你和家的关系：Q5×Q6×Q7，所有人格共用
+const RELATION = {
+  AAA:'对你来说，家很重要的一层意义，是一个能按自己的节奏放松下来、慢慢恢复的地方。熟悉的物件在这里起着特别的作用：一张照片、一件旅行带回来的小物，往往能让空间更有属于自己的痕迹。你也喜欢让家随着生活逐渐变化，不同时刻的选择，让这个空间始终贴近当下的你。',
+  AAB:'对你来说，家很大程度上是一个可以暂时放下外界要求、回到自己节奏里的地方。带着记忆的东西是你和空间之间重要的连接，看到它们，会有一种回来了的踏实。你更倾向与家建立长久的关系，让熟悉的布置与陪伴多年的物品，随着时间慢慢积累出亲切感。',
+  ABA:'对你来说，家的意义很多来自独处的时刻：不被打扰，按照自己的节奏放松和恢复。让你自在的，往往是空间本身的感觉：光线落下来的方式、材质的触感、温度是否刚好。你也喜欢让这种感觉保持新鲜，随着季节或生活节奏调整一些细节，让家继续贴合当下的你。',
+  ABB:'对你来说，家是让自己慢下来、恢复精神的地方。你对空间的感受更多来自整体氛围，光线、触感和温度对了，人自然就能放松。一旦找到适合自己的状态，你更愿意让这份舒适长久延续，熟悉的环境也会让你安心。',
+  BAA:'对你来说，家的意义和亲近的人分不开，一起度过的日常让空间有了温度。那些承载回忆的东西，有的记录着共同经历的时光，有的属于你自己的故事，都让这个家有了特别的意义。你也喜欢家跟着生活一起向前，随着新的经历和生活阶段调整它的样子。',
+  BAB:'对你来说，家之所以有意义，很大一部分是因为亲近的人能够在这里相聚、分享日常。带着回忆的物品让你和空间产生连接，它们记录着经历过的时光，也承载着你与重要的人之间的故事。你更珍惜家中慢慢形成的熟悉感，让这些故事随着生活延续。',
+  BBA:'对你来说，家的意义在于和亲近的人分享日常、自然相处。让你觉得自在的，是空间本身的感觉：光线、触感、温度对了，人就更愿意停留。你也喜欢让这种氛围保持流动，随着季节与生活的变化适度调整，让空间不断拥有新的活力。',
+  BBB:'对你来说，家是亲近的人可以自然相聚、分享日常的地方。你对家的感受更多来自空间整体的氛围。光线、触感和温度恰到好处，相处也会更自在。找到适合的空间状态之后，你更愿意让这种熟悉与舒适慢慢延续。',
+};
+
+// 设计方向：人格 + Q7
+const DIRECTION = {
+  '自由派': { A:'让常用物品待在顺手的位置，收纳不必复杂，给生活留一点灵活调整的余地。你不需要处处严格管理，只要重要的事情做起来方便，家就能继续保持松弛。',
+             B:'把常用的家具和用品认真选到位，优先考虑耐用、方便维护的选择。适合自己的东西用得久，也能减少重复购买和整理的负担。' },
+  '质感派': { A:'让重要的家具和整体配色形成稳定的基础，小件和局部保留调整空间。每次变化都兼顾使用便利与视觉协调，家便可以保持新鲜，却不失整体感。',
+             B:'把精力放在长期使用、又会影响整体观感的关键物件上。选择时兼顾好用与耐看，基础选得合适，日后便不需要反复调整。' },
+  '务实者': { A:'先把日常动线和使用习惯安排顺畅，再为局部调整留一些弹性。不必大动干戈，小幅改变也能让生活保持便利和新鲜感。',
+             B:'优先选择尺寸合适、舒适耐用、维护简单的家具。一次把重要的使用需求考虑清楚，比为了款式反复更换更适合你。' },
+  '美学家': { A:'先为整个空间建立协调的视觉基础，再让局部的材质、物件或细节随着自己的喜好调整。变化可以发生，但整体美感不必因此被打散。',
+             B:'把时间和预算放在真正影响整体视觉感受的元素上，比如重要家具的比例、材质之间的关系，以及光线与背景的协调。找到自己认同的效果后，便值得长久保留。' },
+  '大管家': { A:'建立能够随生活调整的收纳与归位方式，重点是东西容易找到、方便放回，而不是增加整理的步骤。这样生活变化了，秩序也能跟着维持。',
+             B:'为常用物品安排清楚而稳定的位置，让取用和归位都顺手。好管理的系统不一定复杂，关键是能自然融入每天的生活。' },
+  '有品味的大管家': { A:'让收纳与动线保持灵活，随着生活变化适度调整；同时留心关键家具之间的搭配。好用、整齐与视觉协调，可以在同一套安排里兼顾。',
+             B:'把日常动线和归位方式一次考虑周全，再认真挑选长期使用的关键物件。兼顾品质、耐用与空间观感，让家经得起时间，也住得省心。' },
+  '编辑者': { A:'保留清晰的主次与适当的留白，留给少量重点物件表达的空间。想调整时，不必添很多东西，移动或替换一处重点也可能让整体焕然一新。',
+             B:'让家具、材质和留白形成稳定的整体关系。用心选择真正适合的东西，并给它们长久的位置，不需要频繁改变，空间也能持续保持自己的气质。' },
+  '简约派': { A:'大件以耐用、够用和简洁为原则，局部留些调整余地。需要变化时，从小范围着手即可，避免让空间慢慢被新增物品填满。',
+             B:'选择符合生活需要、易于维护且经得起使用的物件。保持清楚的动线和恰当的空白，让简单、顺手的状态长久维持。' },
+};
+const DRIFTER_AESTHETIC = '如果你对美感也有明确要求，可以从最常看到和使用的地方入手，照顾家具之间的视觉协调，不必为了松弛而放弃喜欢的画面。';
+
+// 让家更像你：人格原则 + Q5×Q6 共用段落
+const PRINCIPLE = {
+  '自由派':'让家更贴近你，不必突然变得有条条框框；从最影响日常感受的地方慢慢开始就好。',
+  '质感派':'无论怎样营造属于自己的归属感，都可以把使用体验和整体视觉感受放在一起考虑。',
+  '务实者':'从每天真正会用到的空间入手，让改变顺手、简单，也尽量减少不必要的维护。',
+  '美学家':'回应个人需要的同时，也照顾整体视觉关系，让每一处安排都自然融入你认同的空间画面。',
+  '大管家':'无论想怎样使用空间，都要让物品和活动有合适的归属，保持生活中的便利与秩序。',
+  '有品味的大管家':'把个人需要纳入整体安排，同时兼顾秩序、便利与视觉上的协调。',
+  '编辑者':'把空间留给真正重要的需求，让每件留下的东西都值得，留白同样可以有意义。',
+  '简约派':'无论怎样回应自己的需求，都不必牺牲你珍惜的简洁与开阔。',
+};
+const YOURS = {
+  AA:'为自己保留一处相对不受打扰的领域，面积不一定大，但要能让你自在地恢复节奏。对有个人意义的物品，有的可以放在日常看得见的地方，有的更适合妥善收藏。关键是让它们在生活中得到合适的安放，不必都摆出来。',
+  AB:'为独处和放松留一个舒适的去处，设计时关注整体感官体验：光线能否随需要调整，材质的触感是否舒服，声音与温度是否让人自在。这些体验的组合，可能比某一件家具更能影响你在家的放松程度。',
+  BA:'先考虑怎样让亲近的人能够自然停留、自在交流。对于有意义的物品，可以区分哪些记录着共同经历、哪些属于更私人的故事，再分别为它们寻找适当的位置。重要的是让这些记忆自然融入生活，而不强求全部展示。',
+  BB:'让亲近的人能够自在相处的区域具有足够的舒适度，交流与陪伴才更容易自然发生。同时关注空间的整体感受：光线的层次、材质的触感、声音、温度和坐下来的舒适程度，共同营造让人愿意停留的氛围。',
+};
+
+// 显示用人格名（大管家按判定表区分有品味子版本）
+function displayType(type, ans) {
+  return (type === '大管家' && isPinweiGuanjia(ans)) ? '有品味的大管家' : type;
+}
+
 function getContent(type, ans) {
-  const q1=ans.q1, q2=ans.q2, q3=ans.q3, q4=ans.q4, q5=ans.q5, q6=ans.q6, q7=ans.q7;
-
-  if (type === '自由派') {
-    let desc = '家对你来说是真正放松的地方，不需要费心经营。东西不少，生活里用得上的、暂时用不上的、放着忘了的——都可以在这里。乱一点问题不大，偶尔找不到也没关系。这些都是生活中的"烟火气"。需要注意的是，东西只进不出，堆积久了会变成另一回事。';
-    if (q6==='A') desc += '\n\n你可能还喜欢收藏一些特别的小东西，它们以自己的方式，为你的空间增添个性。';
-
-    // 建议1：实用/不爱折腾/兼具
-    let rec1 = '';
-    const isShiyong = q3==='A', isStable = q7==='B';
-    if (isShiyong && isStable) {
-      rec1 = '动线顺了，再买质量好的放在对的位置，省心又省力。与其花时间整理，不如一开始就选对，用得顺手了自然不乱。';
-    } else if (isShiyong) {
-      rec1 = '动线是第一位的，常用的东西放最顺手的地方，收纳就会更有效。家里不需要很精致，但要找得到、用得到。';
-    } else if (isStable) {
-      rec1 = '买质量好的，用得久，不需要经常替换，省心。东西不需要多，但进来的每件都要真的好用。';
-    } else {
-      rec1 = '动线是第一位的，常用的东西放最顺手的地方——其他的顺其自然，不需要刻意管理。';
-    }
-
-    // 建议2：审美/展示/兼具
-    let rec2 = '';
-    const isAesthetic = q3==='B', isDisplay = q5==='A';
-    if (isAesthetic && isDisplay) {
-      rec2 = '开放式收纳或透明玻璃柜，把你真正喜欢的放出来，让它们成为空间里的主角。家里不需要每件都好看，但要有几个让你进门就心情好的角落。';
-    } else if (isAesthetic) {
-      rec2 = '选一两件你真正喜欢的东西放在最显眼的地方，其他收到不显眼的地方，突出主角。不需要整体都好看，但主角要真的让你开心。';
-    } else if (isDisplay) {
-      rec2 = '巧用开放式收纳或透明玻璃柜，让你的宝贝们更好地被看到。东西放出来，也可以有自己的秩序。';
-    } else {
-      rec2 = '买质量好的，能装，用得久。不需要好看，但要好用——选经得起日常使用的材质和家具。';
-    }
-
-    return {
-      anchor: '东西多一点，乱一点，那都不是事儿。',
-      desc, rec1, rec2
-    };
-  }
-
-  if (type === '质感派') {
-    let desc;
-    if (q3==='B') {
-      desc = '你的家不需要时刻整齐，东西不多不少，但要进你的家门，既要好看，也要好用——这两件事对你来说都是基本条件，缺一不可。你不将就，但也不偏执，家的整体状态尽在你的掌握。';
-    } else {
-      desc = '你的家不需要时刻整齐，东西不多不少，但要进你的家门，首先要满足功能，美观上也不能太将就——这两件事对你来说都很重要，哪个都无法舍弃。你不会因为够用就凑合，也不会为了好看而牺牲实用，家的整体状态尽在你的掌握。';
-    }
-    if (q6==='A') desc += '\n\n你可能还喜欢收藏一些有意思的东西，它们也是你家个性的一部分。';
-
-    let rec1 = q7==='A'
-      ? '背景保持稳定，大件认真选一次，小件留出空间随时调整——稳中有变，不会闷。每次调整都是一次让家更对的机会。'
-      : '把预算集中在最常用、最显眼的那件上，认真选一次，用很久——大件选对了，其他的自然跟着对了。';
-
-    let rec2 = q5==='A'
-      ? '给你在乎的东西一个对的位置，让它真正被看见，而不是淹没在日常里。好看的东西值得被好好对待。'
-      : '封闭收纳保持整洁，把预算花在真正用得上、看得见的地方——对的东西不需要刻意展示，用着顺心就够了。';
-
-    return { anchor: '不将就，是你对家最基本的要求。', desc, rec1, rec2 };
-  }
-
-  if (type === '务实者') {
-    let desc = '你的家最重要的是住得舒服、生活顺畅。好看是加分，不是必须。你不太愿意为了"看起来好"而牺牲实际生活的便利——找到好用实惠的，买了就是了，不需要反复纠结。家对你来说是真正用来生活的地方，不是住给谁看的。';
-    if (q6==='A') desc += '\n\n你可能还喜欢收藏一些有意思的东西，它们也是你家个性的一部分。';
-
-    let rec1 = q7==='A'
-      ? '动线和布局顺了，其他的随时可以调整——不需要大动干戈，小改动就能让家保持新鲜感。顺手才是真的对。'
-      : '认真选一次尺度对的大件，住得舒适才是真的对——比例和尺度比款式更重要，选对了用很久，不需要反复折腾。';
-
-    let rec2 = q5==='A'
-      ? '留一个展示角落，放几件你真正在乎的东西——少而有意思，不需要很多，但值得有一处让空间透口气。'
-      : '封闭式收纳柜结合动线规划，东西收进去整整齐齐，拿出来顺手称心——用起来对了，住起来自然舒服。';
-
-    return { anchor: '好住比好看更重要。', desc, rec1, rec2 };
-  }
-
-  if (type === '美学家') {
-    let desc = '你非常在意家的整体美感，一进门的感觉、家具和物品的摆放方式，都经过你的考量。美对你来说不是奢侈，是基本需求。你不一定追名牌，但一定追求美的东西放在对的位置。家，是你的审美观在生活中最认真的表达。';
-    if (q6==='A') desc += '\n\n你可能还喜欢专门收藏一些有意思的东西，它们也是你家个性的一部分。';
-
-    let rec1 = q7==='A'
-      ? '背景保持中性稳定，大件和墙面克制，给你留出空间随时调整细节——整体感不散，局部可以一直在变。'
-      : '投资一两件真正有品位的大件，用很久——选对了，整个空间的气质自然就出来了。';
-
-    let rec2 = q1==='A'
-      ? '空间里留出几个视觉焦点，让美的东西真正被看见，而不是淹没在日常里。开放式收纳或透明柜，整齐和展示可以同时做到。'
-      : '每件进来的东西都要对，背景克制，让你精选的东西真正发光——少一件将就的，多一件真正喜欢的。';
-
-    return { anchor: '你懂生活，更懂美。', desc, rec1, rec2 };
-  }
-
-  if (type === '大管家') {
-    const isPinwei = q4==='B';
-    let anchor, desc;
-
-    if (isPinwei) {
-      anchor = '东西不少，却井井有条，不失品位。';
-      desc = '对于懂生活、注重舒适与实用的你来说，家里的东西不算少。虽然你不会刻意控制物品的数量，但你对物品的品质和秩序是有要求的。多不是问题，但乱了就肯定会让你不舒服。每件东西需要有它该在的地方，找得到、放得回。好住、有秩序且不失品位的家，住起来才踏实。';
-    } else {
-      anchor = '不怕东西多，就怕东西乱。';
-      desc = '对于懂生活、注重舒适与实用的你来说，家里的东西不算少。虽然物品的数量本身不困扰你，但是假如秩序乱了就肯定会让你不舒服。每件东西需要有它该在的地方，找得到、放得回，相比好看，好住且真正有秩序的家，住起来才踏实。';
-    }
-    if (q6==='A') desc += '\n\n你可能还喜欢收藏一些有意思的东西，它们也都有自己妥帖的位置。';
-
-    let rec1;
-    if (isPinwei) {
-      rec1 = q7==='A'
-        ? '模块化收纳系统更适合你——随时可以调整和扩充，秩序跟着生活走，东西都收整齐了心情就好。同时选品要有耐心，选择有性价比又好看的单品，虽然多花些时间，但又好用又好看，想换也不会心疼。'
-        : '按照动线做足收纳空间，哪怕东西不少，也都有各自的位置。把预算集中在最常用、最显眼的几件大件上，认真挑选出有品质又耐看的——经得起时间和你的考验。';
-    } else {
-      rec1 = q7==='A'
-        ? '模块化收纳系统更适合你——随时可以调整和扩充，秩序跟着生活走，不需要推倒重来。'
-        : '认真做一次收纳规划，每件东西有固定位置，顺手拿顺手放——系统做好了，乱不起来。';
-    }
-
-    let rec2;
-    const isA = q1==='A', isDisplay = q5==='A';
-    if (isA && isDisplay) {
-      rec2 = '开放式收纳或透明柜，整齐和展示同时做到——东西放出来，也能保持视觉上的秩序。';
-    } else if (isA && !isDisplay) {
-      rec2 = '封闭式收纳为主，东西收进去看不见——容量要够，整洁感自然就出来了。';
-    } else if (!isA && isDisplay) {
-      rec2 = '精选几件放出来，其他收好，主次分明——展示的是精华，收起来的是日常。';
-    } else {
-      rec2 = '有进有出，封闭收纳，定期清一清——系统做好了，东西不堆积，乱不起来。';
-    }
-
-    return { anchor, desc, rec1, rec2 };
-  }
-
-  if (type === '编辑者') {
-    let desc = '你家里的东西很少，但每一件都是精挑细选过的。不管是因为美，还是因为它对你真的有意义——能留下的，都是值得在这里的。少而精不是一种苛刻，而是基于你对自己的喜恶有着十分的了解，从而对空间进行最清醒的表达。';
-    if (q6==='A' && q5==='A') desc += '\n\n你可能还喜欢收藏一些有意思的东西，它们经过严格筛选，每一件都值得被好好看见。';
-
-    let rec1 = q7==='A'
-      ? '给每件东西设一个"主角位"，此刻最对的放在最重要的地方——不需要大动干戈，调整一件，整个空间的重心就变了。'
-      : '背景要有温度但不抢戏，墙面和大件保持克制——舞台稳定了，你精选的东西自然发光，不需要经常调整。';
-
-    let rec2 = '';
-    if (q3==='A' || q5==='B') {
-      rec2 = '少而精是一个持续做减法、定期审视的过程，不是一步到位的。如果家里还有其他成员，考虑规划好动线和收纳区，明确什么东西去哪里，让"收拾"对大家都变得容易。或者当完全按自己标准来不现实——不如先给自己划一个区域，哪怕只是一个角落或一张桌子，在那里先实现你想要的克制。';
-    }
-
-    return { anchor: '少而精，是一种选择，也是一种能力。', desc, rec1, rec2 };
-  }
-
-  if (type === '简约派') {
-    let desc = '你不需要很多东西。家里空着比满着更让你舒服，多了就会觉得不对劲。不是因为苛刻，是因为少才是真正滋养你的状态。';
-    if (q2==='A') {
-      desc += '你对空间的感受很敏锐——凌乱会让你心生不安，清爽才是你的底气。';
-    }
-    desc += '家对你来说，是一个可以真正放空的地方。';
-    if (q6==='A') desc += '\n\n你可能还有一些特别在乎的小收藏，它们以自己的方式存在着，不多，但每件都有它的意义。';
-
-    let rec1 = '少不等于冷——一块质感好的地毯、一盏暖色调的灯、一株植物，不需要很多，但能让清爽的家多一点温度。选材质有质感的，触感对了，空间自然有生命。';
-
-    let rec2 = q7==='A'
-      ? '大件选稳定耐用的，一次选对不需要频繁替换；小件留出空间变化，想换就换，不需要纠结太久。'
-      : '在能力范围内选品质最好的，一件真正对的东西胜过十件差不多的——时间会证明你的选择。';
-
-    return { anchor: '少，就对了。', desc, rec1, rec2 };
-  }
-
-  return { anchor: '', desc: '', rec1: '', rec2: '' };
+  const key = displayType(type, ans);
+  const about = ABOUT[key];
+  let desc = about.desc;
+  if (key === '简约派' && ans.q2 === 'A') desc += MINIMALIST_Q2A;
+  let direction = DIRECTION[key][ans.q7];
+  if (key === '自由派' && (ans.q3 === 'B' || ans.q4 === 'B')) direction += '\n\n' + DRIFTER_AESTHETIC;
+  return {
+    name: key,
+    anchor: about.anchor,
+    desc,
+    relation: RELATION[ans.q5 + ans.q6 + ans.q7],
+    direction,
+    yours: PRINCIPLE[key] + '\n\n' + YOURS[ans.q5 + ans.q6],
+  };
 }
 
 // ── 监听选项 ─────────────────────────────────────────
@@ -519,6 +482,22 @@ function checkReady() {
   document.getElementById('calc-btn').disabled = !answered;
 }
 
+// ── 匿名记录（只记答案、结果、语言和时间，不收集任何个人信息）──
+// 部署 Google 表格脚本后，把接收地址填在这里；留空则不记录
+const LOG_URL = '';
+function logResult(ans, resultName) {
+  if (!LOG_URL) return;
+  try {
+    const payload = Object.assign({ lang: document.documentElement.lang || '', result: resultName }, ans);
+    fetch(LOG_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  } catch (e) { /* 记录失败不影响显示结果 */ }
+}
+
 // ── 计算 ─────────────────────────────────────────────
 function calculate() {
   const ans = {};
@@ -526,87 +505,49 @@ function calculate() {
     ans[q] = document.querySelector(`input[name="${q}"]:checked`).value;
   });
 
-  const scores = {};
-  for (const [type, m] of Object.entries(MATRIX)) {
-    scores[type] =
-      m.q1[ans.q1] + m.q2[ans.q2] + m.q3[ans.q3] +
-      m.q4[ans.q4] + m.q5[ans.q5] + m.q6[ans.q6] + m.q7[ans.q7];
-  }
-
-  const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
-  
-  // 并列处理逻辑
-  function breakTie(tied, ans) {
-    // Q1=C是越少越好强信号，优先简约派或编辑者
-    if (ans.q1 === 'C') {
-      const minimal = tied.filter(t => t === '简约派' || t === '编辑者');
-      if (minimal.length > 0) {
-        // 简约派vs编辑者：Q3=B选编辑者，Q3=A选简约派
-        if (minimal.length > 1) return ans.q3 === 'B' ? '编辑者' : '简约派';
-        return minimal[0];
-      }
-    }
-    // Q1!=C排除极简类型
-    if (ans.q1 !== 'C') {
-      tied = tied.filter(t => t !== '简约派' && t !== '编辑者');
-    }
-    // 质感派不在意乱，Q2=A排除质感派
-    if (ans.q2 === 'A') {
-      tied = tied.filter(t => t !== '质感派');
-    }
-    // 美学家美感优先，Q3=A排除美学家
-    if (ans.q3 === 'A') {
-      tied = tied.filter(t => t !== '美学家');
-    }
-    // 自由派不在意乱，Q2=A排除自由派
-    if (ans.q2 === 'A') {
-      tied = tied.filter(t => t !== '自由派');
-    }
-    // 务实者实用优先，Q4=B或Q3=B排除务实者
-    if (ans.q4 === 'B' || ans.q3 === 'B') {
-      tied = tied.filter(t => t !== '务实者');
-    }
-    return tied.length > 0 ? tied[0] : sorted[0][0];
-  }
-
-  const topScore = sorted[0][1];
-  const tiedTypes = sorted.filter(([,s]) => s === topScore).map(([t]) => t);
-  const topType = tiedTypes.length > 1 ? breakTie(tiedTypes, ans) : tiedTypes[0];
+  const { topType } = computeResult(ans);
   const content = getContent(topType, ans);
 
   document.getElementById('res-watermark').textContent = WATERMARKS[topType] || '';
-  let displayName = topType;
-  if (topType === '大管家' && ans.q4 === 'B') displayName = '有品位的大管家';
-  document.getElementById('res-name').textContent = displayName;
+  document.getElementById('res-name').textContent = content.name;
 
   const enNames = {
+    '有品味的大管家':'The Organiser with Taste',
     '自由派':'The Drifter', '质感派':'The Selector', '务实者':'The Pragmatist',
     '美学家':'The Aesthete', '大管家':'The Organiser', '编辑者':'The Editor', '简约派':'The Minimalist'
   };
-  document.getElementById('res-en').textContent = enNames[topType] || '';
+  document.getElementById('res-en').textContent = enNames[content.name] || '';
   document.getElementById('res-anchor').textContent = content.anchor;
-  const descEl = document.getElementById('res-desc');
-  descEl.innerHTML = content.desc.replace(/\n\n/g, '<br><br>');
-  document.getElementById('res-rec1').textContent = content.rec1;
-  document.getElementById('res-rec2').textContent = content.rec2 || '根据你的空间和生活方式，认真选对每一件进来的东西。';
+  const html = t => t.replace(/\n\n/g, '<br><br>');
+  document.getElementById('res-desc').innerHTML = html(content.desc);
+  document.getElementById('res-relation').innerHTML = html(content.relation);
+  document.getElementById('res-direction').innerHTML = html(content.direction);
+  document.getElementById('res-yours').innerHTML = html(content.yours);
 
-  // Re-sort so topType appears first
-  const reordered = [...sorted].sort((a, b) => {
-    if (a[0] === topType) return -1;
-    if (b[0] === topType) return 1;
-    return b[1] - a[1];
-  });
-  const list = document.getElementById('score-list');
-  list.innerHTML = reordered.map(([type, score], i) =>
-    `<div class="score-row ${i===0?'top':''}">
-      <span>${type === topType && topType === '大管家' && ans.q4 === 'B' ? '有品位的大管家' : type}</span>
-      <span class="score-val">${score}分</span>
-    </div>`
-  ).join('');
+  document.getElementById('res-code').textContent = ['q1','q2','q3','q4','q5','q6','q7'].map(q => ans[q]).join(' ');
+  logResult(ans, content.name);
 
   document.getElementById('form-section').style.display = 'none';
   document.getElementById('result-section').classList.add('show');
   window.scrollTo(0,0);
+}
+
+// ── 判定（按分类规则表，纯函数，便于穷举验证）──────────
+// 第一步：Q1、Q2 确定基础组别；第二步：Q3、Q4 在组内细分
+function computeResult(ans) {
+  const aa = ans.q3 === 'A' && ans.q4 === 'A';   // Q3、Q4 都选A
+  const bb = ans.q3 === 'B' && ans.q4 === 'B';   // Q3、Q4 都选B
+  let topType;
+  if (ans.q1 === 'C') {                     // 编辑者 / 简约派组
+    topType = aa ? '简约派' : '编辑者';
+  } else if (ans.q2 === 'B' && ans.q1 === 'A') {   // 自由派组
+    topType = '自由派';
+  } else if (ans.q2 === 'B') {              // 质感派 / 务实者组（Q1=B）
+    topType = aa ? '务实者' : '质感派';
+  } else {                                  // 美学家 / 大管家组（Q2=A，Q1=A或B）
+    topType = bb ? '美学家' : '大管家';
+  }
+  return { topType };
 }
 
 function reset() {
